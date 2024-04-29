@@ -1,0 +1,7 @@
+.idea
+.DS_Store
+_office/*
+data/*
+results/*
+results_xlsx/*
+runtimes/*
