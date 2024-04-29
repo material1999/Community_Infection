@@ -3,7 +3,7 @@ import pandas as pd
 import networkx as nx
 import numpy as np
 
-graphs = 1
+graphs = 1080
 instances_greedy = 100
 instances_final = 10000
 k = 50
@@ -88,8 +88,6 @@ for graph_num in range(1, graphs + 1):
 
     final_inf = 0
 
-    # t.tic()
-
     for instance_num in range(1, instances_final + 1):
 
         G = nx.DiGraph()
@@ -100,18 +98,12 @@ for graph_num in range(1, graphs + 1):
             if r < row[3]:
                 G.add_edge(int(row[1]), int(row[2]))
 
-        # reached_nodes = set(best_k)
         reached_nodes = set()
         temp_nodes = set(best_k)
-
-        # for temp_node in temp_nodes:
-        #     reached_nodes.update(nx.descendants(G, temp_node))
-
         while temp_nodes:
             temp_node = temp_nodes.pop()
             reached_nodes.add(temp_node)
-            temp_nodes.update([item for item in nx.descendants_at_distance(G, temp_node, 1)
-                              if item not in reached_nodes])
+            temp_nodes.update([item for item in G.neighbors(temp_node) if item not in reached_nodes])
 
         final_inf += len(reached_nodes)
         # print(reached_nodes)
@@ -119,20 +111,13 @@ for graph_num in range(1, graphs + 1):
     final_inf /= instances_final
     # print(final_inf)
 
-    # runtime = t.tocvalue()
-    # print("Runtime:", runtime, "s")
-
     with open(greedy_full_path, "a") as greedy_full_output:
         greedy_full_output.write("final infection: " + str(final_inf) + "\n")
 
     ####################################################################################################
-
-    # t.tic()
 
     print("Greedy for graph #" + str(graph_num) + " finished")
     runtime = t.tocvalue()
     print("Runtime:", runtime, "s")
     with open(runtimes_path, "a") as runtimes_output:
         runtimes_output.write(str(graph_num) + ": " + str(runtime) + "\n")
-
-    print("##################################################")
