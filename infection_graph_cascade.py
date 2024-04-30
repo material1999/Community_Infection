@@ -23,9 +23,6 @@ for graph_num in range(1, graphs + 1):
     graph_path = "data/networks/" + str(graph_num) + "/edgeweighted.csv"
     graph_df = pd.read_csv(graph_path, sep=";")
 
-    # df = pd.read_csv(graph_path, sep=";")
-    # graph_df = df[df['edgeweight'] >= 0.05]
-
     # print(graph_df)
     # print(graph_df._get_value(0, "edgeweight"))
 
@@ -41,12 +38,6 @@ for graph_num in range(1, graphs + 1):
 
         G = nx.DiGraph()
         G.add_nodes_from(range(1, 1000 + 1))
-
-        # for index, row in graph_df.iterrows():
-        #     r = np.random.rand()
-        #     if r < row["edgeweight"]:
-        #         G.add_edge(int(row["V1"]), int(row["V2"]))
-        # print(G)
 
         for row in graph_df.itertuples():
             r = np.random.rand()
