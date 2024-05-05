@@ -1,23 +1,12 @@
 from pytictoc import TicToc
 import pandas as pd
 import networkx as nx
-import numpy as np
 import random
+import numpy as np
 
 graphs = 1
-instances_infection_graph = 100
+instances_infection_graph = 1000
 cutoff = 2
-
-
-def choice_own(options, probs):
-    x = np.random.rand()
-    cum = 0
-    for i, p in enumerate(probs):
-        cum += p
-        if x < cum:
-            break
-    return options[i]
-
 
 t = TicToc()
 runtimes_path = "runtimes/infection_graphs/threshold.txt"
@@ -42,9 +31,29 @@ for graph_num in range(1, graphs + 1):
     # print(vertex_df)
     # print(vertex_df._get_value(0, "weight"))
 
-    reached_nodes = dict()
-
     print("Creating instances for graph #" + str(graph_num))
+
+    incoming_edges_dict = dict()
+
+    for row in vertex_df.itertuples():
+
+        weights = graph_df.loc[graph_df['V2'] == row[1]]["edgeweight"].tolist()
+        from_vertex = graph_df.loc[graph_df['V2'] == row[1]]["V1"].tolist()
+        if sum(weights) < 1:
+            weights.append(1 - sum(weights))
+            from_vertex.append(None)
+        else:
+            weights = [float(i) / sum(weights) for i in weights]
+
+        # print(row)
+        # print(graph_df.loc[graph_df['V2'] == row[1]])
+        # print(weights)
+        # print(from_vertex)
+
+        incoming_edges_dict[row[1]] = [from_vertex, weights]
+
+    # print(incoming_edges_dict)
+    reached_nodes = dict()
 
     for instance_num in range(1, instances_infection_graph + 1):
 
@@ -55,27 +64,15 @@ for graph_num in range(1, graphs + 1):
         G = nx.DiGraph()
         G.add_nodes_from(range(1, 1000 + 1))
 
-        for row in vertex_df.itertuples():
+        for vertex in range(1, 1000 + 1):
 
-            weights = graph_df.loc[graph_df['V2'] == row[1]]["edgeweight"].tolist()
-            from_vertex = graph_df.loc[graph_df['V2'] == row[1]]["V1"].tolist()
-            if sum(weights) < 1:
-                weights.append(1 - sum(weights))
-                from_vertex.append(None)
-            else:
-                weights = [float(i) / sum(weights) for i in weights]
-
-            # print(row)
-            # print(graph_df.loc[graph_df['V2'] == row[1]])
-            # print(weights)
-            # print(from_vertex)
-
-            # choice = np.random.choice(from_vertex, p=weights)
-            choice = random.choices(from_vertex, weights=weights)[0]
-            # choice = choice_own(from_vertex, weights)
+            choice = random.choices(incoming_edges_dict[vertex][0],
+                                    weights=incoming_edges_dict[vertex][1])[0]
+            # choice = np.random.choice(incoming_edges_dict[vertex][0],
+            #                           p=incoming_edges_dict[vertex][1])
             # print(choice)
             if choice is not None:
-                G.add_edge(choice, row[1])
+                G.add_edge(choice, vertex)
 
         # General solution for any cutoff value
 
