@@ -31,8 +31,6 @@ for graph_num in range(1, graphs + 1):
     # print(vertex_df)
     # print(vertex_df._get_value(0, "weight"))
 
-    print("Creating instances for graph #" + str(graph_num))
-
     incoming_edges_dict = dict()
 
     for row in vertex_df.itertuples():
@@ -53,7 +51,10 @@ for graph_num in range(1, graphs + 1):
         incoming_edges_dict[row[1]] = [from_vertex, weights]
 
     # print(incoming_edges_dict)
+
     reached_nodes = dict()
+
+    print("Creating instances for graph #" + str(graph_num))
 
     for instance_num in range(1, instances_infection_graph + 1):
 
