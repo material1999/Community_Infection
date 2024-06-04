@@ -19,6 +19,9 @@ for graph_num in range(1, graphs + 1, 10):
     for c_p in connected_percent:
         for t_a in times_average:
 
+            if c_p == 0.4 and t_a == 4:
+                continue
+
             t.tic()
 
             # Read infection graph file
