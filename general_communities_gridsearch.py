@@ -12,7 +12,7 @@ def continue_loop():
 
 graphs = 1
 infection_model = "cascade"
-timeout = 5.0
+timeout = 5
 
 max_community_size = 20
 connected_percent = [0.4, 0.45, 0.5, 0.55, 0.6]
@@ -21,7 +21,8 @@ times_average = [4, 4.5, 5, 5.5, 6]
 t = TicToc()
 runtimes_path = "runtimes/communities_gridsearch/" + infection_model + ".txt"
 with open(runtimes_path, "w") as runtimes_output:
-    runtimes_output.write("Runtimes (s) - max_community_size: " + str(max_community_size) + "\n")
+    runtimes_output.write("Runtimes (s) - max_community_size: " + str(max_community_size) +
+                          " - timeout (s): " + str(timeout) + "\n")
 
 for graph_num in range(1, graphs + 1, 10):
 
