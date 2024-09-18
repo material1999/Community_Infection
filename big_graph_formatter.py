@@ -1,3 +1,5 @@
+import numpy as np
+
 graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
 
 for graph in graphs:
@@ -9,4 +11,5 @@ for graph in graphs:
         next(big_graph_file)
         next(big_graph_file)
         for line in big_graph_file:
-            big_graph_formatted_file.write(line.replace("\t", ";"))
+            big_graph_formatted_file.write(line.strip().replace("\t", ";") + ";"
+                                           + str(np.random.uniform(1e-10, 0.3)) + "\n")
