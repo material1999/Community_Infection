@@ -2,7 +2,7 @@ import os
 
 graphs = 1080
 mode = "greedy_narrow"
-infection_model = "cascade"
+infection_model = "threshold"
 
 connected_percent = [0.4, 0.45, 0.5, 0.55, 0.6]
 times_average = [4, 4.5, 5, 5.5, 6]
