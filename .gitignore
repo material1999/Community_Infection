@@ -1,7 +1,10 @@
 .idea
 .DS_Store
+.RHistory
+
 _office/*
 data/*
 results/*
 results_xlsx/*
 runtimes/*
+visualizations/results/*
