@@ -121,10 +121,11 @@ for graph_num in range(1, graphs + 1):
         G = nx.DiGraph()
         G.add_nodes_from(range(1, 1000 + 1))
 
-        for row in graph_df.itertuples():
-            r = np.random.rand()
-            if r < row[3]:
-                G.add_edge(int(row[1]), int(row[2]))
+        for vertex in range(1, 1000 + 1):
+            choice = random.choices(incoming_edges_dict[vertex][0],
+                                    weights=incoming_edges_dict[vertex][1])[0]
+            if choice is not None:
+                G.add_edge(choice, vertex)
 
         reached_nodes = set()
         temp_nodes = set(best_k)
