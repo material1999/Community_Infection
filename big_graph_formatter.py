@@ -12,4 +12,4 @@ for graph in graphs:
         next(big_graph_file)
         for line in big_graph_file:
             big_graph_formatted_file.write(line.strip().replace("\t", ";") + ";"
-                                           + str(np.random.uniform(1e-10, 0.3)) + "\n")
+                                           + str(np.random.uniform(1e-10, 0.2)) + "\n")
