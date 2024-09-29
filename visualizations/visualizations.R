@@ -1,4 +1,6 @@
 library(dplyr)
+library(tidyr)
+library(ggplot2)
 
 setwd("~/Documents/Projects/CommunityInfectionRework/")
 
@@ -39,3 +41,50 @@ labels_max_greedy_narrow_20_cascade <- labels_max_greedy_narrow_20_cascade[
 rm(greedy_labels)
 rm(missing_labels)
 rm(missing_df)
+
+ggplot(data = labels_max_greedy_narrow_20_cascade, aes(x = Column, y = Count)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.5, size = 4) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 7.5),
+    axis.text.y = element_text(size = 10),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  ) +
+  labs(
+    title = "Max Counts by Parameter Combinations",
+    x = "Parameter Combinations",
+    y = "Max Count"
+  ) +
+  ylim(0, max(labels_max_greedy_narrow_20_cascade$Count) + 2)
+
+heatmap_data <- labels_max_greedy_narrow_20_cascade %>%
+  separate(Column, into = c("Parameter1", "Parameter2"), sep = "--") %>%
+  mutate(Parameter1 = as.factor(Parameter1), Parameter2 = as.factor(Parameter2))
+
+ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = Count), color = "black", size = 4) +
+  scale_fill_gradient(
+    low = "white",
+    high = "#0073B2",
+    limits = c(min(labels_max_greedy_narrow_20_cascade$Count),
+               max(labels_max_greedy_narrow_20_cascade$Count)),
+    breaks = c(min(labels_max_greedy_narrow_20_cascade$Count),
+               max(labels_max_greedy_narrow_20_cascade$Count)),
+    labels = scales::label_number(accuracy = 1)
+  ) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = "Max Counts by Parameter Combinations",
+    x = "Times Average",
+    y = "Connected Percent",
+    fill = "Count"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
