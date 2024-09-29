@@ -27,3 +27,15 @@ colnames(max_greedy_narrow_20_cascade) <- c("Max_Value", "Max_Column")
 
 labels_max_greedy_narrow_20_cascade <- as.data.frame(table(max_greedy_narrow_20_cascade$Max_Column))
 colnames(labels_max_greedy_narrow_20_cascade) <- c("Column", "Count")
+
+greedy_labels <- colnames(greedy_narrow_20_cascade)
+missing_labels <- setdiff(greedy_labels, labels_max_greedy_narrow_20_cascade$Column)
+missing_df <- data.frame(Column = missing_labels, Count = 0)
+labels_max_greedy_narrow_20_cascade <- rbind(labels_max_greedy_narrow_20_cascade, missing_df)
+labels_max_greedy_narrow_20_cascade$Column <- as.character(labels_max_greedy_narrow_20_cascade$Column)
+labels_max_greedy_narrow_20_cascade <- labels_max_greedy_narrow_20_cascade[
+  order(labels_max_greedy_narrow_20_cascade$Column), ]
+
+rm(greedy_labels)
+rm(missing_labels)
+rm(missing_df)
