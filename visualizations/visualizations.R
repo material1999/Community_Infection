@@ -2,6 +2,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(patchwork)
+library(reshape2)
 
 setwd("~/Documents/Projects/CommunityInfectionRework/")
 
@@ -235,8 +236,48 @@ plot3 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
 
 rm(heatmap_data)
 
+############################## COMBINED PLOT ##############################
+
 combined_plot <- plot1 + plot_spacer() + plot2 + plot_spacer() + plot3 +
   plot_layout(ncol = 5, widths = c(1, 0.1, 1, 0.1, 1)) +
   plot_annotation(tag_levels = 'A')
 
 ggsave("visualizations/combined_plot.png", combined_plot, width = 21, height = 6)
+
+############################## FULL VS NARROW ##############################
+
+long_data <- melt(greedy_narrow_20_cascade, variable.name = "parameters", value.name = "result")
+long_data <- subset(long_data, result != "xxxxx")
+long_data$result <- as.numeric(long_data$result)
+long_data$row <- rep(1:nrow(greedy_narrow_20_cascade),
+                     times = ncol(greedy_narrow_20_cascade))[1:nrow(long_data)]
+
+plot4 <- ggplot(long_data, aes(x = factor(row), y = result)) +
+  geom_boxplot(outlier.color = "red") +
+  labs(x = "Graphs", y = "Result",
+       title = "Range of Results per Graph Across Parameter Combinations") +
+  scale_x_discrete(breaks = seq(1, 108, by = 107)) +
+  theme_minimal() +
+  theme(plot.background = element_rect(fill = "white"))
+
+summary_data <- long_data %>%
+  group_by(row) %>%
+  summarise(min_result = min(result, na.rm = TRUE),
+            max_result = max(result, na.rm = TRUE))
+
+target_values <- greedy_full[[1]]
+summary_data$target <- target_values
+
+plot5 <- ggplot(summary_data, aes(x = row)) +
+  geom_ribbon(aes(ymin = min_result, ymax = max_result, fill = "Result Range"), alpha = 0.5) +
+  geom_line(aes(y = (min_result + max_result) / 2, color = "Average Result"), size = 0.5) +
+  geom_line(aes(y = target, color = "Target Value"), size = 0.5) +
+  labs(x = "Graphs", y = "Result Range",
+       title = "Range of Results per Graph Across Parameter Combinations", 
+       fill = "Legend", color = "Legend") +
+  scale_x_continuous(breaks = seq(1, 108, by = 107)) +
+  theme_minimal() +
+  theme(plot.background = element_rect(fill = "white"))
+
+ggsave("visualizations/plot4.png", plot4, width = 21, height = 6)
+ggsave("visualizations/plot5.png", plot5, width = 21, height = 6)
