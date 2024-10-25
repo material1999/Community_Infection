@@ -1,3 +1,5 @@
+############################## INITIALIZATIONS ##############################
+
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -5,6 +7,8 @@ library(patchwork)
 library(reshape2)
 
 setwd("~/Documents/Projects/CommunityInfectionRework/")
+
+############################## READ DATA ##############################
 
 max_in_row <- function(row) {
   numeric_row <- as.numeric(suppressWarnings(as.numeric(row)))
@@ -23,9 +27,9 @@ greedy_full <- data.frame(
                        header = FALSE)[, 1],
   onlylistenonce = read.csv("_office/results/greedy_full/summary/onlylistenonce.csv",
                             header = FALSE)[, 1]
-  )
+)
 
-############################## CASCADE ##############################
+############################## INDEPENDENT CASCADE NARROW ##############################
 
 greedy_narrow_20_cascade <- read.csv(
   "_office/results/greedy_narrow_20/summary/cascade.csv",
@@ -54,22 +58,6 @@ rm(greedy_labels)
 rm(missing_labels)
 rm(missing_df)
 
-# ggplot(data = labels_max_greedy_narrow_20_cascade, aes(x = Column, y = Count)) +
-#   geom_bar(stat = "identity") +
-#   geom_text(aes(label = Count), vjust = -0.5, size = 4) +
-#   theme(
-#     axis.text.x = element_text(angle = 45, hjust = 1, size = 7.5),
-#     axis.text.y = element_text(size = 10),
-#     panel.grid.major = element_blank(),
-#     panel.grid.minor = element_blank()
-#   ) +
-#   labs(
-#     title = "Max Counts by Parameter Combinations",
-#     x = "Parameter Combinations",
-#     y = "Max Count"
-#   ) +
-#   ylim(0, max(labels_max_greedy_narrow_20_cascade$Count) + 2)
-
 heatmap_data <- labels_max_greedy_narrow_20_cascade %>%
   separate(Column, into = c("Parameter1", "Parameter2"), sep = "--") %>%
   mutate(Parameter1 = as.factor(Parameter1), Parameter2 = as.factor(Parameter2))
@@ -88,7 +76,7 @@ plot1 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   ) +
   theme_minimal(base_size = 15) +
   labs(
-    title = "Cascade",
+    title = "Independent Cascade",
     x = "Times Average",
     y = "Connected Percent",
     fill = "Best Influence"
@@ -106,7 +94,74 @@ plot1 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
 
 rm(heatmap_data)
 
-############################## THRESHOLD ##############################
+
+############################## INDEPENDENT CASCADE COMMUNITY VALUE ##############################
+
+community_value_cascade <- read.csv(
+  "_office/results/community_value/summary/cascade.csv",
+  sep = ";", header = TRUE, check.names = FALSE
+) %>% select(-ncol(.))
+
+max_community_value_cascade <- as.data.frame(
+  t(apply(community_value_cascade, 1, max_in_row)))
+colnames(max_community_value_cascade) <- c("Max_Value", "Max_Column")
+
+labels_max_community_value_cascade <- as.data.frame(
+  table(max_community_value_cascade$Max_Column))
+colnames(labels_max_community_value_cascade) <- c("Column", "Count")
+
+greedy_labels <- colnames(community_value_cascade)
+missing_labels <- setdiff(greedy_labels, labels_max_community_value_cascade$Column)
+missing_df <- data.frame(Column = missing_labels, Count = 0)
+labels_max_community_value_cascade <- rbind(
+  labels_max_community_value_cascade, missing_df)
+labels_max_community_value_cascade$Column <- as.character(
+  labels_max_community_value_cascade$Column)
+labels_max_community_value_cascade <- labels_max_community_value_cascade[
+  order(labels_max_community_value_cascade$Column), ]
+
+rm(greedy_labels)
+rm(missing_labels)
+rm(missing_df)
+
+heatmap_data <- labels_max_community_value_cascade %>%
+  separate(Column, into = c("Parameter1", "Parameter2"), sep = "--") %>%
+  mutate(Parameter1 = as.factor(Parameter1), Parameter2 = as.factor(Parameter2))
+
+plot6 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = Count), color = "black", size = 4) +
+  scale_fill_gradient(
+    low = "white",
+    high = "#0073B2",
+    limits = c(min(labels_max_community_value_cascade$Count),
+               max(labels_max_community_value_cascade$Count)),
+    breaks = c(min(labels_max_community_value_cascade$Count),
+               max(labels_max_community_value_cascade$Count)),
+    labels = scales::label_number(accuracy = 1)
+  ) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = "Independent Cascade",
+    x = "Times Average",
+    y = "Connected Percent",
+    fill = "Best Influence"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
+    legend.justification = c(0.6, 0.4),
+    legend.title.position = "top",
+    legend.key.height = unit(1.25, "cm")
+  )
+
+rm(heatmap_data)
+
+
+############################## LINEAR THRESHOLD NARROW ##############################
 
 greedy_narrow_20_threshold <- read.csv(
   "_office/results/greedy_narrow_20/summary/threshold.csv",
@@ -153,7 +208,7 @@ plot2 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   ) +
   theme_minimal(base_size = 15) +
   labs(
-    title = "Threshold",
+    title = "Linear Threshold",
     x = "Times Average",
     y = "Connected Percent",
     fill = "Best Influence"
@@ -171,7 +226,7 @@ plot2 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
 
 rm(heatmap_data)
 
-############################## ONLY-LISTEN-ONCE ##############################
+############################## ONLY-LISTEN-ONCE NARROW ##############################
 
 greedy_narrow_20_onlylistenonce <- read.csv(
   "_office/results/greedy_narrow_20/summary/onlylistenonce.csv",
@@ -236,13 +291,21 @@ plot3 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
 
 rm(heatmap_data)
 
-############################## COMBINED PLOT ##############################
+############################## COMBINED PLOT NARROW ##############################
 
 combined_plot <- plot1 + plot_spacer() + plot2 + plot_spacer() + plot3 +
   plot_layout(ncol = 5, widths = c(1, 0.1, 1, 0.1, 1)) +
   plot_annotation(tag_levels = 'A')
 
-ggsave("visualizations/combined_plot.png", combined_plot, width = 21, height = 6)
+ggsave("visualizations/combined_plot_narrow.png", combined_plot, width = 21, height = 6)
+
+############################## COMBINED PLOT COMMUNITY VALUE ##############################
+
+combined_plot <- plot6 + plot_spacer() + plot6 + plot_spacer() + plot6 +
+  plot_layout(ncol = 5, widths = c(1, 0.1, 1, 0.1, 1)) +
+  plot_annotation(tag_levels = 'A')
+
+ggsave("visualizations/combined_plot_community_value.png", combined_plot, width = 21, height = 6)
 
 ############################## FULL VS NARROW ##############################
 
