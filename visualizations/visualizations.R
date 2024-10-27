@@ -226,6 +226,71 @@ plot2 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
 
 rm(heatmap_data)
 
+############################## LINEAR THRESHOLD COMMUNITY VALUE ##############################
+
+community_value_threshold <- read.csv(
+  "_office/results/community_value/summary/threshold.csv",
+  sep = ";", header = TRUE, check.names = FALSE
+) %>% select(-ncol(.))
+
+max_community_value_threshold <- as.data.frame(
+  t(apply(community_value_threshold, 1, max_in_row)))
+colnames(max_community_value_threshold) <- c("Max_Value", "Max_Column")
+
+labels_max_community_value_threshold <- as.data.frame(
+  table(max_community_value_threshold$Max_Column))
+colnames(labels_max_community_value_threshold) <- c("Column", "Count")
+
+greedy_labels <- colnames(community_value_threshold)
+missing_labels <- setdiff(greedy_labels, labels_max_community_value_threshold$Column)
+missing_df <- data.frame(Column = missing_labels, Count = 0)
+labels_max_community_value_threshold <- rbind(
+  labels_max_community_value_threshold, missing_df)
+labels_max_community_value_threshold$Column <- as.character(
+  labels_max_community_value_threshold$Column)
+labels_max_community_value_threshold <- labels_max_community_value_threshold[
+  order(labels_max_community_value_threshold$Column), ]
+
+rm(greedy_labels)
+rm(missing_labels)
+rm(missing_df)
+
+heatmap_data <- labels_max_community_value_threshold %>%
+  separate(Column, into = c("Parameter1", "Parameter2"), sep = "--") %>%
+  mutate(Parameter1 = as.factor(Parameter1), Parameter2 = as.factor(Parameter2))
+
+plot7 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = Count), color = "black", size = 4) +
+  scale_fill_gradient(
+    low = "white",
+    high = "#0073B2",
+    limits = c(min(labels_max_community_value_threshold$Count),
+               max(labels_max_community_value_threshold$Count)),
+    breaks = c(min(labels_max_community_value_threshold$Count),
+               max(labels_max_community_value_threshold$Count)),
+    labels = scales::label_number(accuracy = 1)
+  ) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = "Linear Threshold",
+    x = "Times Average",
+    y = "Connected Percent",
+    fill = "Best Influence"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
+    legend.justification = c(0.6, 0.4),
+    legend.title.position = "top",
+    legend.key.height = unit(1.25, "cm")
+  )
+
+rm(heatmap_data)
+
 ############################## ONLY-LISTEN-ONCE NARROW ##############################
 
 greedy_narrow_20_onlylistenonce <- read.csv(
@@ -291,6 +356,72 @@ plot3 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
 
 rm(heatmap_data)
 
+############################## ONLY-LISTEN-ONCE COMMUNITY VALUE ##############################
+
+community_value_onlylistenonce <- read.csv(
+  "_office/results/community_value/summary/onlylistenonce.csv",
+  sep = ";", header = TRUE, check.names = FALSE
+) %>% select(-ncol(.))
+
+max_community_value_onlylistenonce <- as.data.frame(
+  t(apply(community_value_onlylistenonce, 1, max_in_row)))
+colnames(max_community_value_onlylistenonce) <- c("Max_Value", "Max_Column")
+
+labels_max_community_value_onlylistenonce <- as.data.frame(
+  table(max_community_value_onlylistenonce$Max_Column))
+colnames(labels_max_community_value_onlylistenonce) <- c("Column", "Count")
+
+greedy_labels <- colnames(community_value_onlylistenonce)
+missing_labels <- setdiff(greedy_labels, labels_max_community_value_onlylistenonce$Column)
+missing_df <- data.frame(Column = missing_labels, Count = 0)
+labels_max_community_value_onlylistenonce <- rbind(
+  labels_max_community_value_onlylistenonce, missing_df)
+labels_max_community_value_onlylistenonce$Column <- as.character(
+  labels_max_community_value_onlylistenonce$Column)
+labels_max_community_value_onlylistenonce <- labels_max_community_value_onlylistenonce[
+  order(labels_max_community_value_onlylistenonce$Column), ]
+
+rm(greedy_labels)
+rm(missing_labels)
+rm(missing_df)
+
+heatmap_data <- labels_max_community_value_onlylistenonce %>%
+  separate(Column, into = c("Parameter1", "Parameter2"), sep = "--") %>%
+  mutate(Parameter1 = as.factor(Parameter1), Parameter2 = as.factor(Parameter2))
+
+plot8 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = Count), color = "black", size = 4) +
+  scale_fill_gradient(
+    low = "white",
+    high = "#0073B2",
+    limits = c(min(labels_max_community_value_onlylistenonce$Count),
+               max(labels_max_community_value_onlylistenonce$Count)),
+    breaks = c(min(labels_max_community_value_onlylistenonce$Count),
+               max(labels_max_community_value_onlylistenonce$Count)),
+    labels = scales::label_number(accuracy = 1)
+  ) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = "Only-Listen-Once",
+    x = "Times Average",
+    y = "Connected Percent",
+    fill = "Best Influence"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
+    legend.justification = c(0.6, 0.4),
+    legend.title.position = "top",
+    legend.key.height = unit(1.25, "cm")
+  )
+
+rm(heatmap_data)
+
+
 ############################## COMBINED PLOT NARROW ##############################
 
 combined_plot <- plot1 + plot_spacer() + plot2 + plot_spacer() + plot3 +
@@ -301,7 +432,7 @@ ggsave("visualizations/combined_plot_narrow.png", combined_plot, width = 21, hei
 
 ############################## COMBINED PLOT COMMUNITY VALUE ##############################
 
-combined_plot <- plot6 + plot_spacer() + plot6 + plot_spacer() + plot6 +
+combined_plot <- plot6 + plot_spacer() + plot7 + plot_spacer() + plot8 +
   plot_layout(ncol = 5, widths = c(1, 0.1, 1, 0.1, 1)) +
   plot_annotation(tag_levels = 'A')
 
