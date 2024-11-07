@@ -7,7 +7,6 @@ from tqdm import tqdm
 
 # graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
 graphs = ["Cit-HepPh"]
-infection_model = "cascade"
 
 instances_greedy = 10
 instances_final = 100
@@ -28,8 +27,9 @@ for graph in graphs:
 
     print("##################################################")
     print("Reading graph " + str(graph))
-    graph_path = "results/infection_graphs_big/" + infection_model + "/" + graph + ".csv"
+    graph_path = "data/big_graphs_weighted/" + graph + ".csv"
     graph_df = pd.read_csv(graph_path, sep=";")
+    graph_df.columns = ["V1", "V2", "edgeweight"]
 
     all_nodes = pd.concat([graph_df['V1'], graph_df['V2']]).unique().tolist()
 
