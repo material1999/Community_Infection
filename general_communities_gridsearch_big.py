@@ -5,14 +5,14 @@ import numpy as np
 
 # graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
 # graphs = ["Cit-HepPh"]
-graphs = ["soc-Epinions1"]
+graphs = ["Email-EuAll"]
 infection_model = "cascade"
 
 max_community_size = 50
-connected_percent = [0.8, 0.85, 0.9]
-times_average = [25, 25.5, 26]
+connected_percent = [0.7, 0.75, 0.8]
+times_average = [30, 30.5, 31]
 
-### Cit-HepPh: 50
+### Cit-HepPh: 50 --- soc-Epinions1: 25 --- Email-EuAll: 25
 keep_neighbors = 25
 
 t = TicToc()
