@@ -32,7 +32,7 @@ greedy_full <- data.frame(
 ############################## INDEPENDENT CASCADE NARROW ##############################
 
 greedy_narrow_20_cascade <- read.csv(
-  "_office/results/greedy_narrow_20/summary/cascade.csv",
+  "_office/results/greedy_narrow/summary/cascade.csv",
   sep = ";", header = TRUE, check.names = FALSE
 ) %>% select(-ncol(.))
 
@@ -64,7 +64,7 @@ heatmap_data <- labels_max_greedy_narrow_20_cascade %>%
 
 plot1 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
   geom_tile(color = "black") +
-  geom_text(aes(label = Count), color = "black", size = 4) +
+  geom_text(aes(label = Count), color = "black", size = 6) +
   scale_fill_gradient(
     low = "white",
     high = "#0073B2",
@@ -82,8 +82,8 @@ plot1 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
     fill = "Best Influence"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
@@ -130,7 +130,7 @@ heatmap_data <- labels_max_community_value_cascade %>%
 
 plot6 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
   geom_tile(color = "black") +
-  geom_text(aes(label = Count), color = "black", size = 4) +
+  geom_text(aes(label = Count), color = "black", size = 6) +
   scale_fill_gradient(
     low = "white",
     high = "#0073B2",
@@ -148,8 +148,8 @@ plot6 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
     fill = "Best Influence"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
@@ -164,7 +164,7 @@ rm(heatmap_data)
 ############################## LINEAR THRESHOLD NARROW ##############################
 
 greedy_narrow_20_threshold <- read.csv(
-  "_office/results/greedy_narrow_20/summary/threshold.csv",
+  "_office/results/greedy_narrow/summary/threshold.csv",
   sep = ";", header = TRUE, check.names = FALSE
 ) %>% select(-ncol(.))
 
@@ -196,7 +196,7 @@ heatmap_data <- labels_max_greedy_narrow_20_threshold %>%
 
 plot2 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
   geom_tile(color = "black") +
-  geom_text(aes(label = Count), color = "black", size = 4) +
+  geom_text(aes(label = Count), color = "black", size = 6) +
   scale_fill_gradient(
     low = "white",
     high = "#0073B2",
@@ -214,8 +214,8 @@ plot2 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
     fill = "Best Influence"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
@@ -261,7 +261,7 @@ heatmap_data <- labels_max_community_value_threshold %>%
 
 plot7 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
   geom_tile(color = "black") +
-  geom_text(aes(label = Count), color = "black", size = 4) +
+  geom_text(aes(label = Count), color = "black", size = 6) +
   scale_fill_gradient(
     low = "white",
     high = "#0073B2",
@@ -279,8 +279,8 @@ plot7 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
     fill = "Best Influence"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
@@ -294,7 +294,7 @@ rm(heatmap_data)
 ############################## ONLY-LISTEN-ONCE NARROW ##############################
 
 greedy_narrow_20_onlylistenonce <- read.csv(
-  "_office/results/greedy_narrow_20/summary/onlylistenonce.csv",
+  "_office/results/greedy_narrow/summary/onlylistenonce.csv",
   sep = ";", header = TRUE, check.names = FALSE
 ) %>% select(-ncol(.))
 
@@ -326,7 +326,7 @@ heatmap_data <- labels_max_greedy_narrow_20_onlylistenonce %>%
 
 plot3 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
   geom_tile(color = "black") +
-  geom_text(aes(label = Count), color = "black", size = 4) +
+  geom_text(aes(label = Count), color = "black", size = 6) +
   scale_fill_gradient(
     low = "white",
     high = "#0073B2",
@@ -344,8 +344,8 @@ plot3 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
     fill = "Best Influence"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
@@ -391,7 +391,7 @@ heatmap_data <- labels_max_community_value_onlylistenonce %>%
 
 plot8 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = Count)) +
   geom_tile(color = "black") +
-  geom_text(aes(label = Count), color = "black", size = 4) +
+  geom_text(aes(label = Count), color = "black", size = 6) +
   scale_fill_gradient(
     low = "white",
     high = "#0073B2",
@@ -409,8 +409,8 @@ plot8 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
     fill = "Best Influence"
   ) +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     legend.title = element_text(angle = 90, vjust = 0.9, margin = margin(b=20)),
