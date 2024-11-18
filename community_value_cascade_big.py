@@ -26,7 +26,7 @@ for graph in graphs:
 
     # Read graph file
     print("##################################################")
-    print("Reading graph # " + graph)
+    print("Reading graph " + graph)
     graph_path = "data/big_graphs_weighted/" + graph + ".csv"
     graph_df = pd.read_csv(graph_path, sep=";")
     graph_df.columns = ["V1", "V2", "edgeweight"]
