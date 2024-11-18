@@ -39,7 +39,7 @@ for graph in graphs:
     for c_p in connected_percent:
         for t_a in times_average:
 
-            communities_path = ("results/communities_gridsearch_big/onlylistenonce/" + str(graph_num) + "_" +
+            communities_path = ("results/communities_gridsearch_big/onlylistenonce/" + graph + "_" +
                                 str(int(c_p * 100)) + "%_" + str(t_a) + "x.csv")
             if not os.path.exists(communities_path):
                 print(communities_path + " does not exist")
@@ -49,7 +49,7 @@ for graph in graphs:
 
             t.tic()
 
-            greedy_narrow_path = ("results/greedy_narrow_big/onlylistenonce/" + str(graph_num) + "_" +
+            greedy_narrow_path = ("results/greedy_narrow_big/onlylistenonce/" + graph + "_" +
                                 str(int(c_p*100)) + "%_" + str(t_a) + "x.csv")
             with open(greedy_narrow_path, 'w') as greedy_full_output:
                 greedy_full_output.write("greedy instances: " + str(instances_greedy) +
@@ -143,13 +143,13 @@ for graph in graphs:
             for instance_num in range(1, instances_final + 1):
 
                 G = nx.DiGraph()
-                G.add_nodes_from(range(1, 1000 + 1))
+                G.add_nodes_from(all_nodes)
 
-                for vertex in range(1, 1000 + 1):
+                for vertex in range(0, len(all_nodes)):
                     r = np.random.rand()
-                    if r < vertex_df._get_value(vertex - 1, "weight"):
-                        for node in incoming_edges_dict[vertex]:
-                            G.add_edge(node, vertex)
+                    if r < vertex_df._get_value(vertex, "weight"):
+                        for node in incoming_edges_dict[all_nodes[vertex]]:
+                            G.add_edge(node, all_nodes[vertex])
 
                 reached_nodes = set()
                 temp_nodes = set(best_k)
@@ -169,8 +169,8 @@ for graph in graphs:
 
             ####################################################################################################
 
-            print("Greedy for graph #" + str(graph_num) + " finished")
+            print("Greedy for graph " + graph + " finished")
             runtime = t.tocvalue()
             print("Runtime:", runtime, "s")
             with open(runtimes_path, "a") as runtimes_output:
-                runtimes_output.write(str(graph_num) + ": " + str(runtime) + "\n")
+                runtimes_output.write(graph + ": " + str(runtime) + "\n")
