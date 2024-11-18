@@ -3,6 +3,7 @@ import pandas as pd
 import networkx as nx
 import numpy as np
 import random
+from tqdm import tqdm
 
 graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
 #graphs = ["Cit-HepPh"]
@@ -25,6 +26,7 @@ for graph in graphs:
     print("Reading graph " + graph)
     graph_path = "data/big_graphs_weighted/" + graph + ".csv"
     graph_df = pd.read_csv(graph_path, sep=";")
+    graph_df.columns = ["V1", "V2", "edgeweight"]
     vertex_path = "data/big_graphs_vertices/" + graph + ".csv"
     vertex_df = pd.read_csv(vertex_path, sep=";", names=["vertex", "weight"])
 
@@ -58,7 +60,7 @@ for graph in graphs:
         best_inf = 0
         node_infections = dict()
 
-        for instance_num in range(1, instances_greedy + 1):
+        for instance_num in tqdm(range(1, instances_greedy + 1)):
 
             G = nx.DiGraph()
             G.add_nodes_from(all_nodes)
