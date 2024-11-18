@@ -5,8 +5,8 @@ import numpy as np
 import os
 from tqdm import tqdm
 
-# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-graphs = ["Cit-HepPh"]
+graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+# graphs = ["Cit-HepPh"]
 
 instances_greedy = 10
 instances_final = 100
