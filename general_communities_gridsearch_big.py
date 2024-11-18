@@ -4,16 +4,15 @@ import networkx as nx
 import numpy as np
 
 # graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-# graphs = ["Cit-HepPh"]
-graphs = ["Email-EuAll"]
-infection_model = "cascade"
+graphs = ["Cit-HepPh"]
+infection_model = "threshold"
 
 max_community_size = 50
 connected_percent = [0.7, 0.75, 0.8]
-times_average = [30, 30.5, 31]
+times_average = [7, 7.5, 8]
 
 ### Cit-HepPh: 50 --- soc-Epinions1: 25 --- Email-EuAll: 25
-keep_neighbors = 25
+keep_neighbors = 50
 
 t = TicToc()
 runtimes_path = "runtimes/communities_gridsearch_big/" + infection_model + ".txt"
