@@ -1,12 +1,12 @@
 from pytictoc import TicToc
 import pandas as pd
 import networkx as nx
-import numpy as np
+import random
 import os
 from tqdm import tqdm
 
-# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-graphs = ["Cit-HepPh"]
+graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+# graphs = ["Cit-HepPh"]
 
 instances_greedy = 10
 instances_final = 100
@@ -18,26 +18,29 @@ connected_percent = [0.7, 0.75, 0.8]
 times_average = [7, 7.5, 8]
 
 t = TicToc()
-runtimes_path = "runtimes/greedy_narrow_big/cascade.txt"
+runtimes_path = "runtimes/greedy_narrow_big/threshold.txt"
 with open(runtimes_path, "w") as runtimes_output:
     runtimes_output.write("Runtimes (s) - greedy instances: " + str(instances_greedy)
                           + " - final instances: " + str(instances_final) + "\n")
 
 for graph in graphs:
 
+    # Read graph file
     print("##################################################")
     print("Reading graph " + graph)
     graph_path = "data/big_graphs_weighted/" + graph + ".csv"
     graph_df = pd.read_csv(graph_path, sep=";")
     graph_df.columns = ["V1", "V2", "edgeweight"]
+    vertex_path = "data/big_graphs_vertices/" + graph + ".csv"
+    vertex_df = pd.read_csv(vertex_path, sep=";", names=["vertex", "weight"])
 
     all_nodes = pd.concat([graph_df['V1'], graph_df['V2']]).unique().tolist()
 
     for c_p in connected_percent:
         for t_a in times_average:
 
-            communities_path = ("results/communities_gridsearch_big/cascade/" + graph + "_" +
-                                str(int(c_p*100)) + "%_" + str(t_a) + "x.csv")
+            communities_path = ("results/communities_gridsearch_big/threshold/" + graph + "_" +
+                                str(int(c_p * 100)) + "%_" + str(t_a) + "x.csv")
             if not os.path.exists(communities_path):
                 print(communities_path + " does not exist")
                 continue
@@ -46,15 +49,33 @@ for graph in graphs:
 
             t.tic()
 
-            greedy_narrow_path = ("results/greedy_narrow_big/cascade/" + graph + "_" +
+            greedy_narrow_path = ("results/greedy_narrow_big/threshold/" + str(graph_num) + "_" +
                                 str(int(c_p*100)) + "%_" + str(t_a) + "x.csv")
             with open(greedy_narrow_path, 'w') as greedy_full_output:
                 greedy_full_output.write("greedy instances: " + str(instances_greedy) +
                                          " - final instances: " + str(instances_final) +
                                          " - k: " + str(k) + "\n")
 
-            ####################################################################################################
+            incoming_edges_dict = dict()
+            for row in vertex_df.itertuples():
+                weights = graph_df.loc[graph_df['V2'] == row[1]]["edgeweight"].tolist()
+                from_vertex = graph_df.loc[graph_df['V2'] == row[1]]["V1"].tolist()
+                if sum(weights) < 1:
+                    weights.append(1 - sum(weights))
+                    from_vertex.append(None)
+                else:
+                    weights = [float(i) / sum(weights) for i in weights]
 
+                # print(row)
+                # print(graph_df.loc[graph_df['V2'] == row[1]])
+                # print(weights)
+                # print(from_vertex)
+
+                incoming_edges_dict[row[1]] = [from_vertex, weights]
+
+            # print(incoming_edges_dict)
+
+            ####################################################################################################
             community_values = dict()
             with open(communities_path, 'r') as communities_input:
                 for line in communities_input:
@@ -66,10 +87,8 @@ for graph in graphs:
                             community_values[node] += 1
 
             community_values_sorted = dict(sorted(community_values.items(), key=lambda item: item[1], reverse=True))
-            possible_nodes = list(community_values_sorted.keys())[:narrow[graph]]
-
+            possible_nodes = list(community_values_sorted.keys())[:narrow]
             ####################################################################################################
-
             best_k = list()
 
             print("Greedy for graph " + graph + " in progress...")
@@ -84,13 +103,22 @@ for graph in graphs:
                     G = nx.DiGraph()
                     G.add_nodes_from(all_nodes)
 
-                    for row in graph_df.itertuples():
-                        r = np.random.rand()
-                        if r < row[3]:
-                            G.add_edge(int(row[1]), int(row[2]))
+                    for vertex in all_nodes:
+                        choice = random.choices(incoming_edges_dict[vertex][0],
+                                                weights=incoming_edges_dict[vertex][1])[0]
+                        if choice is not None:
+                            G.add_edge(choice, vertex)
 
                     for node in possible_nodes:
                         if node not in best_k:
+
+                            # 1.5x slower
+
+                            # reached_nodes = set(best_k)
+                            # reached_nodes.add(node)
+                            # temp_nodes = reached_nodes.copy()
+                            # for temp_node in temp_nodes:
+                            #     reached_nodes.update(nx.descendants(G, temp_node))
 
                             reached_nodes = set()
                             temp_nodes = set(best_k)
@@ -109,6 +137,7 @@ for graph in graphs:
                     best_inf = node_infections[best_node] / instances_greedy
 
                 best_k.append(best_node)
+                # print(best_k)
 
                 with open(greedy_narrow_path, "a") as greedy_full_output:
                     greedy_full_output.write(str(i) + " --- " + str(best_k) + " --- " + str(best_inf) + "\n")
@@ -120,12 +149,13 @@ for graph in graphs:
             for instance_num in range(1, instances_final + 1):
 
                 G = nx.DiGraph()
-                G.add_nodes_from(all_nodes)
+                G.add_nodes_from(range(1, 1000 + 1))
 
-                for row in graph_df.itertuples():
-                    r = np.random.rand()
-                    if r < row[3]:
-                        G.add_edge(int(row[1]), int(row[2]))
+                for vertex in all_nodes:
+                    choice = random.choices(incoming_edges_dict[vertex][0],
+                                            weights=incoming_edges_dict[vertex][1])[0]
+                    if choice is not None:
+                        G.add_edge(choice, vertex)
 
                 reached_nodes = set()
                 temp_nodes = set(best_k)
@@ -138,6 +168,7 @@ for graph in graphs:
                 # print(reached_nodes)
 
             final_inf /= instances_final
+            # print(final_inf)
 
             with open(greedy_narrow_path, "a") as greedy_full_output:
                 greedy_full_output.write("final infection: " + str(final_inf) + "\n")
