@@ -506,7 +506,7 @@ plot9 <- ggplot(data = keep, aes(x = ON, y = OM, fill = VALUE)) +
   scale_y_continuous(breaks = unique(keep$OM), labels = unique(keep$OM)) +
   theme_minimal(base_size = 15) +
   labs(
-    title = bquote("Independent Cascade, " * italic(mu) * " Fixed"),
+    title = bquote("Independent Cascade, " * italic(mu) * " = 0.3"),
     x = expression(italic(o[n])),
     y = expression(italic(o[m])),
     fill = "VALUE"
@@ -518,11 +518,6 @@ plot9 <- ggplot(data = keep, aes(x = ON, y = OM, fill = VALUE)) +
     panel.grid.minor = element_blank(),
     legend.position = "none"
   )
-
-print(plot9)
-
-rm(keep)
-rm(new_row)
 
 ############################## NARROW BREAKDOWN THRESHOLD MU ##############################
 keep <- data.frame(
@@ -554,7 +549,7 @@ plot10 <- ggplot(data = keep, aes(x = ON, y = OM, fill = VALUE)) +
   scale_y_continuous(breaks = unique(keep$OM), labels = unique(keep$OM)) +
   theme_minimal(base_size = 15) +
   labs(
-    title = bquote("Linear Threshold, " * italic(mu) * " Fixed"),
+    title = bquote("Linear Threshold, " * italic(mu) * " = 0.3"),
     x = expression(italic(o[n])),
     y = expression(italic(o[m])),
     fill = "VALUE"
@@ -566,11 +561,6 @@ plot10 <- ggplot(data = keep, aes(x = ON, y = OM, fill = VALUE)) +
     panel.grid.minor = element_blank(),
     legend.position = "none"
   )
-
-print(plot10)
-
-rm(keep)
-rm(new_row)
 
 ############################## NARROW BREAKDOWN ONLYLISTENONCE MU ##############################
 keep <- data.frame(
@@ -602,7 +592,7 @@ plot11 <- ggplot(data = keep, aes(x = ON, y = OM, fill = VALUE)) +
   scale_y_continuous(breaks = unique(keep$OM), labels = unique(keep$OM)) +
   theme_minimal(base_size = 15) +
   labs(
-    title = bquote("Only-Listen-Once, " * italic(mu) * " Fixed"),
+    title = bquote("Only-Listen-Once, " * italic(mu) * " = 0.3"),
     x = expression(italic(o[n])),
     y = expression(italic(o[m])),
     fill = "VALUE"
@@ -615,7 +605,270 @@ plot11 <- ggplot(data = keep, aes(x = ON, y = OM, fill = VALUE)) +
     legend.position = "none"
   )
 
-print(plot11)
+############################## NARROW BREAKDOWN CASCADE ON ##############################
+keep <- data.frame(
+  MU = numeric(),
+  OM = numeric(),
+  VALUE = numeric()
+)
+num = 0
+for (mu in seq(0.1, 0.6, 0.1)) {
+  for (on in seq(0.1, 0.6, 0.1)) {
+    for (om in seq(2, 4, 1)) {
+      num = num + 1
+      if (abs(on - 0.3) < .Machine$double.eps^0.5) {
+        new_row <- data.frame(MU = mu, OM = om, VALUE = max_greedy_narrow_20_cascade[num, "Max_Value"])
+        keep <- rbind(keep, new_row)
+      }
+    }
+  }
+}
 
-rm(keep)
-rm(new_row)
+min_value <- min(as.numeric(keep$VALUE))
+max_value <- max(as.numeric(keep$VALUE))
+heat_colors <- rev(heat.colors(length(unique(keep$VALUE))))
+plot12 <- ggplot(data = keep, aes(x = MU, y = OM, fill = VALUE)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = sprintf("%.1f", as.numeric(VALUE))), color = "black", size = 6) +
+  scale_fill_manual(values = heat_colors, labels = sprintf("%.1f", as.numeric(sort(unique(keep$VALUE))))) +
+  scale_x_continuous(breaks = unique(keep$MU), labels = unique(keep$MU)) +
+  scale_y_continuous(breaks = unique(keep$OM), labels = unique(keep$OM)) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = bquote("Independent Cascade, " * italic(o[n]) * " = 0.3"),
+    x = expression(italic(mu)),
+    y = expression(italic(o[m])),
+    fill = "VALUE"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+
+############################## NARROW BREAKDOWN THRESHOLD ON ##############################
+keep <- data.frame(
+  MU = numeric(),
+  OM = numeric(),
+  VALUE = numeric()
+)
+num = 0
+for (mu in seq(0.1, 0.6, 0.1)) {
+  for (on in seq(0.1, 0.6, 0.1)) {
+    for (om in seq(2, 4, 1)) {
+      num = num + 1
+      if (abs(on - 0.3) < .Machine$double.eps^0.5) {
+        new_row <- data.frame(MU = mu, OM = om, VALUE = max_greedy_narrow_20_threshold[num, "Max_Value"])
+        keep <- rbind(keep, new_row)
+      }
+    }
+  }
+}
+
+min_value <- min(as.numeric(keep$VALUE))
+max_value <- max(as.numeric(keep$VALUE))
+heat_colors <- rev(heat.colors(length(unique(keep$VALUE))))
+plot13 <- ggplot(data = keep, aes(x = MU, y = OM, fill = VALUE)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = sprintf("%.1f", as.numeric(VALUE))), color = "black", size = 6) +
+  scale_fill_manual(values = heat_colors, labels = sprintf("%.1f", as.numeric(sort(unique(keep$VALUE))))) +
+  scale_x_continuous(breaks = unique(keep$MU), labels = unique(keep$MU)) +
+  scale_y_continuous(breaks = unique(keep$OM), labels = unique(keep$OM)) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = bquote("Linear Threshold, " * italic(o[n]) * " = 0.3"),
+    x = expression(italic(mu)),
+    y = expression(italic(o[m])),
+    fill = "VALUE"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+
+############################## NARROW BREAKDOWN ONLYLISTENONCE ON ##############################
+keep <- data.frame(
+  MU = numeric(),
+  OM = numeric(),
+  VALUE = numeric()
+)
+num = 0
+for (mu in seq(0.1, 0.6, 0.1)) {
+  for (on in seq(0.1, 0.6, 0.1)) {
+    for (om in seq(2, 4, 1)) {
+      num = num + 1
+      if (abs(on - 0.3) < .Machine$double.eps^0.5) {
+        new_row <- data.frame(MU = mu, OM = om, VALUE = max_greedy_narrow_20_onlylistenonce[num, "Max_Value"])
+        keep <- rbind(keep, new_row)
+      }
+    }
+  }
+}
+
+min_value <- min(as.numeric(keep$VALUE))
+max_value <- max(as.numeric(keep$VALUE))
+heat_colors <- rev(heat.colors(length(unique(keep$VALUE))))
+plot14 <- ggplot(data = keep, aes(x = MU, y = OM, fill = VALUE)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = sprintf("%.1f", as.numeric(VALUE))), color = "black", size = 6) +
+  scale_fill_manual(values = heat_colors, labels = sprintf("%.1f", as.numeric(sort(unique(keep$VALUE))))) +
+  scale_x_continuous(breaks = unique(keep$MU), labels = unique(keep$MU)) +
+  scale_y_continuous(breaks = unique(keep$OM), labels = unique(keep$OM)) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = bquote("Only-Listen-Once, " * italic(o[n]) * " = 0.3"),
+    x = expression(italic(mu)),
+    y = expression(italic(o[m])),
+    fill = "VALUE"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+
+############################## NARROW BREAKDOWN CASCADE OM ##############################
+keep <- data.frame(
+  MU = numeric(),
+  OM = numeric(),
+  VALUE = numeric()
+)
+num = 0
+for (mu in seq(0.1, 0.6, 0.1)) {
+  for (on in seq(0.1, 0.6, 0.1)) {
+    for (om in seq(2, 4, 1)) {
+      num = num + 1
+      if (abs(om - 3) < .Machine$double.eps^0.5) {
+        new_row <- data.frame(MU = mu, ON = on, VALUE = max_greedy_narrow_20_cascade[num, "Max_Value"])
+        keep <- rbind(keep, new_row)
+      }
+    }
+  }
+}
+
+min_value <- min(as.numeric(keep$VALUE))
+max_value <- max(as.numeric(keep$VALUE))
+heat_colors <- rev(heat.colors(length(unique(keep$VALUE))))
+plot15 <- ggplot(data = keep, aes(x = MU, y = ON, fill = VALUE)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = sprintf("%.1f", as.numeric(VALUE))), color = "black", size = 6) +
+  scale_fill_manual(values = heat_colors, labels = sprintf("%.1f", as.numeric(sort(unique(keep$VALUE))))) +
+  scale_x_continuous(breaks = unique(keep$MU), labels = unique(keep$MU)) +
+  scale_y_continuous(breaks = unique(keep$ON), labels = unique(keep$ON)) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = bquote("Independent Cascade, " * italic(o[m]) * " = 3"),
+    x = expression(italic(mu)),
+    y = expression(italic(o[n])),
+    fill = "VALUE"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+
+############################## NARROW BREAKDOWN THRESHOLD OM ##############################
+keep <- data.frame(
+  MU = numeric(),
+  OM = numeric(),
+  VALUE = numeric()
+)
+num = 0
+for (mu in seq(0.1, 0.6, 0.1)) {
+  for (on in seq(0.1, 0.6, 0.1)) {
+    for (om in seq(2, 4, 1)) {
+      num = num + 1
+      if (abs(om - 3) < .Machine$double.eps^0.5) {
+        new_row <- data.frame(MU = mu, ON = on, VALUE = max_greedy_narrow_20_threshold[num, "Max_Value"])
+        keep <- rbind(keep, new_row)
+      }
+    }
+  }
+}
+
+min_value <- min(as.numeric(keep$VALUE))
+max_value <- max(as.numeric(keep$VALUE))
+heat_colors <- rev(heat.colors(length(unique(keep$VALUE))))
+plot16 <- ggplot(data = keep, aes(x = MU, y = ON, fill = VALUE)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = sprintf("%.1f", as.numeric(VALUE))), color = "black", size = 6) +
+  scale_fill_manual(values = heat_colors, labels = sprintf("%.1f", as.numeric(sort(unique(keep$VALUE))))) +
+  scale_x_continuous(breaks = unique(keep$MU), labels = unique(keep$MU)) +
+  scale_y_continuous(breaks = unique(keep$ON), labels = unique(keep$ON)) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = bquote("Linear Threshold, " * italic(o[m]) * " = 3"),
+    x = expression(italic(mu)),
+    y = expression(italic(o[n])),
+    fill = "VALUE"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+
+############################## NARROW BREAKDOWN ONLYLISTENONCE OM ##############################
+keep <- data.frame(
+  MU = numeric(),
+  OM = numeric(),
+  VALUE = numeric()
+)
+num = 0
+for (mu in seq(0.1, 0.6, 0.1)) {
+  for (on in seq(0.1, 0.6, 0.1)) {
+    for (om in seq(2, 4, 1)) {
+      num = num + 1
+      if (abs(om - 3) < .Machine$double.eps^0.5) {
+        new_row <- data.frame(MU = mu, ON = on, VALUE = max_greedy_narrow_20_onlylistenonce[num, "Max_Value"])
+        keep <- rbind(keep, new_row)
+      }
+    }
+  }
+}
+
+min_value <- min(as.numeric(keep$VALUE))
+max_value <- max(as.numeric(keep$VALUE))
+heat_colors <- rev(heat.colors(length(unique(keep$VALUE))))
+plot17 <- ggplot(data = keep, aes(x = MU, y = ON, fill = VALUE)) +
+  geom_tile(color = "black") +
+  geom_text(aes(label = sprintf("%.1f", as.numeric(VALUE))), color = "black", size = 6) +
+  scale_fill_manual(values = heat_colors, labels = sprintf("%.1f", as.numeric(sort(unique(keep$VALUE))))) +
+  scale_x_continuous(breaks = unique(keep$MU), labels = unique(keep$MU)) +
+  scale_y_continuous(breaks = unique(keep$ON), labels = unique(keep$ON)) +
+  theme_minimal(base_size = 15) +
+  labs(
+    title = bquote("Only-Listen-Once, " * italic(o[m]) * " = 3"),
+    x = expression(italic(mu)),
+    y = expression(italic(o[n])),
+    fill = "VALUE"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+
+############################## COMBINED PLOT GRAPH VARIABLES ##############################
+
+combined_plot <- plot9 + plot10 + plot11 +
+  plot12 + plot13 + plot14 +
+  plot15 + plot16 + plot17 +
+  plot_layout(ncol = 3) +
+  plot_annotation(tag_levels = 'A')
+
+ggsave("visualizations/combined_plot_3x3.png", combined_plot, width = 21, height = 12)
