@@ -10,3 +10,4 @@ runtimes/*
 visualizations/results/*
 *.xlsx
 *.png
+.ropeproject
