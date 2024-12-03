@@ -100,7 +100,7 @@ Recent studies have shown that influence maximization and community detection ca
 
 In \cite{evaluating}, Hajdu et al. defined so-called community values to rank influential nodes in networks. First, they did community detection on the entire graph and then they counted how many communities a single node belongs to. The vertices could be ranked based on these values: the ones that were part of many communities had higher values assigned to them, thus having more influence on the network. They proposed that using these community values, the search space of the greedy influence maximization method can be efficiently narrowed. The idea was tested with numerous community detection algorithms and two influence models.
 
-In this paper, our main contribution is to propose a general community detection algorithm that is capable of using the output of any influence spreading algorithm to create communities. The algorithm repeatedly simulates influence processes on the input graph, and measures how much each individual edge contributes to the spreading process. A new influence graph is then constructed from these edge influence values, and a community detection method is applied to generate communities in an agglomerative fashion using a local expansion rule. We demonstrate the generality of this approach using a variety of influence spreading models: the 1. Independent Cascade, 2. Linear Threshold and the 3. Only-Listen-Once influence spreading models. 
+In this paper, our main contribution is to propose a general community detection algorithm that is capable of using the output of any influence spreading algorithm to create communities. The algorithm repeatedly simulates influence processes on the input graph, and measures how much each individual edge contributes to the spreading process. A new influence graph is then constructed from these edge influence values, and a community detection method is applied to generate communities in an agglomerative fashion using a local expansion rule. We demonstrate the generality of this approach using a variety of influence spreading models: the 1. Independent Cascade, 2. Linear Threshold and the 3. Only-Listen-Once influence spreading models.
 
 As our secondary contribution, following the approach of Hajdu et al., we use the output of our newly proposed community detection algorithm to improve the performance of the greedy influence maximization algorithm of Kempe et al. We show that regardless of the influence model, choosing the most influential nodes based on their community value is efficient for the influence maximization problem. We test the performance of our approach on a variety of artificially generated and real-life benchmark networks. We have to mention that we can't compare our results to \cite{evaluating} since Hajdu et al. used undirected networks compared to our directed ones.
 
@@ -121,7 +121,7 @@ Before describing our newly proposed community detection algorithm, in this sect
 
 \subsection{Influence models}\label{subsec_infmodels}
 
-Graph-based influence models (also known as diffusion models) can be used to model a large variety of real-life phenomena. In this paper we focus on the spreading opinion and influence on graphs. 
+Graph-based influence models (also known as diffusion models) can be used to model a large variety of real-life phenomena. In this paper we focus on the spreading opinion and influence on graphs.
 
 Let $G(V,E)$ denote graph $G$, with $V(G)$ as the set of nodes and $E(G)$ as the set of edges connecting them. The influence models used in this paper require an influence transmission value $0 < w_{u,v} \leq 1$ to be assigned to each edge of the graph. Furthermore, all three models assign states to the nodes of the network: they can be {\em active} or {\em inactive}. These models also require a set of initially influenced nodes $A_0$ to be selected before the spreading process begins. How nodes become active varies depending on the influence model. One similarity among the chosen models is that active nodes keep their state until the end of the process, they can't become inactive again. In all three models, the spreading process takes place in discrete time steps or iterations, and each iteration can be characterized with the number of active nodes. All three models are finite, i.e. the influence spreading process stops after a finite number of iterations.
 
@@ -131,7 +131,7 @@ Let $G(V,E)$ denote graph $G$, with $V(G)$ as the set of nodes and $E(G)$ as the
 
 \subsubsection{Independent Cascade model}
 
-In the Independent Cascade (IC) model \cite{kempe} nodes try to activate their inactive neighbors according the the influence transmission values between them starting from the set of initially active nodes $A_0$. However, in any iteration $i$, only the newly activated nodes, activated in iteration $i-1$, are able to activate their inactive neighbors. This effectively creates another state for the nodes: activated, newly activated and inactive. These newly activated nodes have one chance to activate each of their inactive neighbors according to the $w_{u,v}$ influence probability assigned to the edge connecting them. If the attempt is successful, the target node will become active in iteration $i$. If a node has multiple newly activated neighbors, the activation attempts are made in an arbitrary order independently of each other. 
+In the Independent Cascade (IC) model \cite{kempe} nodes try to activate their inactive neighbors according the the influence transmission values between them starting from the set of initially active nodes $A_0$. However, in any iteration $i$, only the newly activated nodes, activated in iteration $i-1$, are able to activate their inactive neighbors. This effectively creates another state for the nodes: activated, newly activated and inactive. These newly activated nodes have one chance to activate each of their inactive neighbors according to the $w_{u,v}$ influence probability assigned to the edge connecting them. If the attempt is successful, the target node will become active in iteration $i$. If a node has multiple newly activated neighbors, the activation attempts are made in an arbitrary order independently of each other.
 
 %%========================%%
 %% Linear Threshold model %%
@@ -432,9 +432,9 @@ We compare three different settings in our analysis:
 \begin{enumerate}
 
   \item \textit{Full greedy.} As a benchmark, we execute the greedy approximation algorithm by Kempe et al. for each input network. This heuristic selects vertices from the entire graph. \colorbox{pink}{TODO: greedy and final instances}
-  
+
   \item \textit{Narrow greedy.} To demonstrate the effectiveness of our general community detection algorithm, we narrow the search space of the greedy approximation algorithm for the top 20\% nodes (regarding the artificially generated graphs, it means $200$ vertices in each graph) based on their community values. The greedy heuristic can only use this subset and select $K = 50$ vertices. \colorbox{pink}{TODO: greedy and final instances}
-  
+
   \item \textit{Community values.} We also run influence simulations on the top 5\% of the nodes (it means 50 vertices for the artificially generated graphs) to see whether the greedy approximation algorithm performs better or community values by themselves can identify the most influential nodes in our networks.
 
 \end{enumerate}
@@ -534,12 +534,12 @@ To create the influence graphs, we use the exact same parameters as we set for t
 Num. of nodes & $34546$ & $34546$ & $34546$ & $34546$ \\
 Num. of edges & $421578$ & $3787811$ & $3263196$ & $3831125$ \\
 Avg. edge weight & $0.1$ & $0.028$ & $0.008$ & $0.018$ \\
-Diameter & $$ & $$ & $$ & \#\#\#\footnotemark[1] \\
-Density & $$ & $$ & $$ & $$ \\
-Avg. clustering coeff. & $$ & $$ & $$ & $$ \\
+Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
+Density & $0.00035$ & $$ & $$ & $$ \\
+Avg. clustering coeff. & $0.143264$ & $$ & $$ & $$ \\
 \botrule
 \end{tabular}
-\footnotetext[1]{The influence graph is not strongly connected for the Only-Listen-Once model, thus the diameter attribute is incomprehensible for this case.}
+\footnotetext[1]{The input and influence graphs are not strongly connected, thus the diameter attribute is incomprehensible for these cases.}
 
 \vspace{7.5mm}
 
@@ -553,12 +553,12 @@ Avg. clustering coeff. & $$ & $$ & $$ & $$ \\
 Num. of nodes & $75879$ & $75879$ & $75879$ & $75879$ \\
 Num. of edges & $508837$ & $20459651$ & $12381456$ & $20708694$ \\
 Avg. edge weight & $0.1$ & $$ & $$ & $$ \\
-Diameter & $$ & $$ & $$ & \#\#\#\footnotemark[1] \\
-Density & $$ & $$ & $$ & $$ \\
-Avg. clustering coeff. & $$ & $$ & $$ & $$ \\
+Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
+Density & $0.00009$ & $$ & $$ & $$ \\
+Avg. clustering coeff. & $0.11017$ & $$ & $$ & $$ \\
 \botrule
 \end{tabular}
-\footnotetext[1]{The influence graph is not strongly connected for the Only-Listen-Once model, thus the diameter attribute is incomprehensible for this case.}
+\footnotetext[1]{The input and influence graphs are not strongly connected, thus the diameter attribute is incomprehensible for these cases.}
 
 \vspace{7.5mm}
 
@@ -572,16 +572,16 @@ Avg. clustering coeff. & $$ & $$ & $$ & $$ \\
 Num. of nodes & $265214$ & $265214$ & $265214$ & $265214$ \\
 Num. of edges & $420045$ & $45584632$ & $21376948$ & $46321475$ \\
 Avg. edge weight & $0.1$ & $$ & $$ & $$ \\
-Diameter & $$ & $$ & $$ & \#\#\#\footnotemark[1] \\
-Density & $$ & $$ & $$ & $$ \\
-Avg. clustering coeff. & $$ & $$ & $$ & $$ \\
+Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
+Density & $0.00001$ & $$ & $$ & $$ \\
+Avg. clustering coeff. & $0.05647$ & $$ & $$ & $$ \\
 \botrule
 \end{tabular}
-\footnotetext[1]{The influence graph is not strongly connected for the Only-Listen-Once model, thus the diameter attribute is incomprehensible for this case.}
+\footnotetext[1]{The input and influence graphs are not strongly connected, thus the diameter attribute is incomprehensible for these cases.}
 
 \end{table}
 
-Similar characteristics can be discovered for the real-life networks if we compare our results to Table \ref{table_influence_graphs}: the influence graphs are notably denser and their average edge weights are considerably smaller compared to the input networks.
+Similar characteristics can be discovered for the real-life networks if we compare our results to Table \ref{table_influence_graphs}: the influence graphs are notably denser and their average edge weights are considerably smaller compared to the input networks. One difference, however, is that none of the input graphs are strongly connected, making all of the influence graps not strongly connected either.
 
 For community detection, hyperparameter fine-tuning in this scenario is even more crucial thanks to the magnitude of nodes and edges. Instead of implementing timeouts with a threshold value, a more drastic heuristic is considered. When expanding the community initiatives, only a predefined number of neighbors are tested. This way some communities might not be found instantly, but we hope that the most important structures will still be enough for our solution. For the smallest \textit{cit-HepPh} network, this $n_{max}$ parameter is set to 50, and for the other two bigger ones, namely \textit{soc-Epinions1} and \textit{email-EuAll}, $n_{max} = 25$ is used. Still, few quantitative metrics can be analysed here without using our communities for narrowing the search space in Algorithm \ref{algo_greedy_narrow}.
 
