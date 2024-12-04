@@ -77,8 +77,8 @@ plot1 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   theme_minimal(base_size = 15) +
   labs(
     title = "Independent Cascade",
-    x = "Times Average",
-    y = "Connected Percent",
+    x = "Connected Percent",
+    y = "Times Average",
     fill = "Best Influence"
   ) +
   theme(
@@ -143,8 +143,8 @@ plot6 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   theme_minimal(base_size = 15) +
   labs(
     title = "Independent Cascade",
-    x = "Times Average",
-    y = "Connected Percent",
+    x = "Connected Percent",
+    y = "Times Average",
     fill = "Best Influence"
   ) +
   theme(
@@ -209,8 +209,8 @@ plot2 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   theme_minimal(base_size = 15) +
   labs(
     title = "Linear Threshold",
-    x = "Times Average",
-    y = "Connected Percent",
+    x = "Connected Percent",
+    y = "Times Average",
     fill = "Best Influence"
   ) +
   theme(
@@ -274,8 +274,8 @@ plot7 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   theme_minimal(base_size = 15) +
   labs(
     title = "Linear Threshold",
-    x = "Times Average",
-    y = "Connected Percent",
+    x = "Connected Percent",
+    y = "Times Average",
     fill = "Best Influence"
   ) +
   theme(
@@ -339,8 +339,8 @@ plot3 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   theme_minimal(base_size = 15) +
   labs(
     title = "Only-Listen-Once",
-    x = "Times Average",
-    y = "Connected Percent",
+    x = "Connected Percent",
+    y = "Times Average",
     fill = "Best Influence"
   ) +
   theme(
@@ -404,8 +404,8 @@ plot8 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
   theme_minimal(base_size = 15) +
   labs(
     title = "Only-Listen-Once",
-    x = "Times Average",
-    y = "Connected Percent",
+    x = "Connected Percent",
+    y = "Times Average",
     fill = "Best Influence"
   ) +
   theme(
