@@ -872,3 +872,66 @@ combined_plot <- plot9 + plot10 + plot11 +
   plot_annotation(tag_levels = 'A')
 
 ggsave("visualizations/combined_plot_3x3.png", combined_plot, width = 21, height = 12)
+
+############################## COMPARISON OF INFLUENCE VALUES ##############################
+
+data <- data.frame(
+  Settings = rep(c("Community values (best)", "Narrow greedy (best)", "Full greedy"), each = 3),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), times = 3),
+  Value = c(147.82, 156.96, 65.63, 170.32, 183.30, 74.49, 173.42, 186.09, 78.55)
+)
+
+data$Settings <- factor(data$Settings, levels = c("Community values (best)", "Narrow greedy (best)", "Full greedy"))
+
+ggplot(data, aes(x = Model, y = Value, fill = Settings)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(
+    title = "Comparison of Influence Values Across Models",
+    x = "Model",
+    y = "Average Influence Value"
+  ) +
+  scale_fill_manual(values = c("skyblue", "salmon", "lightgreen"))
+
+############################## COMPARISON OF RUNTIMES ##############################
+
+data <- data.frame(
+  Steps = c(
+    "Influence graphs", "Community detection", "Narrow greedy", 
+    "Full greedy", "Influence graphs", "Community detection", 
+    "Narrow greedy", "Full greedy", "Influence graphs", 
+    "Community detection", "Narrow greedy", "Full greedy"
+  ),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), each = 4),
+  Value = c(103, 16, 158, 374, 48, 34, 74, 262, 31, 139, 51, 128),
+  Type = rep(c("Stacked", "Stacked", "Stacked", "Full greedy"), times = 3)
+)
+
+data$Steps <- factor(data$Steps, levels = c("Narrow greedy", "Community detection", "Influence graphs", "Full greedy"))
+
+ggplot(data, aes(x = Model, y = Value, fill = Steps)) +
+  geom_bar(data = subset(data, Type == "Stacked"), 
+           aes(x = Model, fill = Steps), 
+           stat = "identity", position = "stack", width = 0.4,
+           just = 1) +
+  geom_bar(data = subset(data, Type == "Full greedy"), 
+           aes(x = Model, fill = "Full greedy"),
+           stat = "identity", position = position_dodge(width = 1), width = 0.4,
+           just = 0) +
+  theme_minimal() +
+  labs(
+    title = "Average Runtime of Different Steps Across Models",
+    x = "Model",
+    y = "Runtime (seconds)",
+    fill = "Steps"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Influence graphs" = "grey", 
+      "Community detection" = "wheat", 
+      "Narrow greedy" = "salmon", 
+      "Full greedy" = "lightgreen"
+    )
+  )
+
+############################## TODO ##############################
