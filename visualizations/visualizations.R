@@ -473,9 +473,6 @@ plot5 <- ggplot(summary_data, aes(x = row)) +
   theme_minimal() +
   theme(plot.background = element_rect(fill = "white"))
 
-ggsave("visualizations/plot4.png", plot4, width = 21, height = 6)
-ggsave("visualizations/plot5.png", plot5, width = 21, height = 6)
-
 ############################## NARROW BREAKDOWN CASCADE MU ##############################
 keep <- data.frame(
   ON = numeric(),
@@ -883,15 +880,21 @@ data <- data.frame(
 
 data$Settings <- factor(data$Settings, levels = c("Community values (best)", "Narrow greedy (best)", "Full greedy"))
 
-ggplot(data, aes(x = Model, y = Value, fill = Settings)) +
+plot_comparison_of_influence_values <- ggplot(data, aes(x = Model, y = Value, fill = Settings)) +
   geom_bar(stat = "identity", position = "dodge") +
-  theme_minimal() +
+  theme_minimal(base_size = 15) +
   labs(
-    title = "Comparison of Influence Values Across Models",
     x = "Model",
     y = "Average Influence Value"
   ) +
-  scale_fill_manual(values = c("skyblue", "salmon", "lightgreen"))
+  scale_fill_manual(
+    values = c("#70AD47", "#FFC000", "#ED7D31")
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave("visualizations/plot_performance.png", plot_comparison_of_influence_values, width = 8, height = 6)
 
 ############################## COMPARISON OF RUNTIMES ##############################
 
@@ -909,7 +912,7 @@ data <- data.frame(
 
 data$Steps <- factor(data$Steps, levels = c("Narrow greedy", "Community detection", "Influence graphs", "Full greedy"))
 
-ggplot(data, aes(x = Model, y = Value, fill = Steps)) +
+plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Steps)) +
   geom_bar(data = subset(data, Type == "Stacked"), 
            aes(x = Model, fill = Steps), 
            stat = "identity", position = "stack", width = 0.4,
@@ -918,20 +921,24 @@ ggplot(data, aes(x = Model, y = Value, fill = Steps)) +
            aes(x = Model, fill = "Full greedy"),
            stat = "identity", position = position_dodge(width = 1), width = 0.4,
            just = 0) +
-  theme_minimal() +
+  theme_minimal(base_size = 15) +
   labs(
-    title = "Average Runtime of Different Steps Across Models",
     x = "Model",
     y = "Runtime (seconds)",
     fill = "Steps"
   ) +
   scale_fill_manual(
     values = c(
-      "Influence graphs" = "grey", 
-      "Community detection" = "wheat", 
-      "Narrow greedy" = "salmon", 
-      "Full greedy" = "lightgreen"
+      "Influence graphs" = "#5F5F5F",
+      "Community detection" = "#5A9BD5",
+      "Narrow greedy" = "#FFC000",
+      "Full greedy" = "#ED7D31"
     )
+  ) +
+  theme(
+    legend.position = "bottom"
   )
+
+ggsave("visualizations/plot_runtime.png", plot_comparison_of_runtimes, width = 8, height = 6)
 
 ############################## TODO ##############################
