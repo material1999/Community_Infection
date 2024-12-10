@@ -3,8 +3,8 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-# graphs = ["Cit-HepPh"]
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["Cit-HepPh"]
 infection_model = "cascade"
 
 for graph in graphs:
@@ -12,7 +12,7 @@ for graph in graphs:
     # Read infection graph file
     print("##################################################")
     print("Reading infection graph " + graph)
-    graph_path = "results/infection_graphs_big/" + infection_model + "/" + graph + ".csv"
+    graph_path = "_office/results/infection_graphs_big/" + infection_model + "/" + graph + ".csv"
     graph_df = pd.read_csv(graph_path, sep=";")
 
     G = nx.DiGraph()
@@ -21,8 +21,10 @@ for graph in graphs:
 
     print(G)
 
-    # mean_edge_weight = np.mean([weight for _, _, weight in G.edges(data='weight')], dtype=np.float64)
-    #
+    mean_edge_weight = np.mean([weight for _, _, weight in G.edges(data='weight')], dtype=np.float64)
+
+    print(mean_edge_weight)
+
     # degrees = [degree for _, degree in G.degree()]
     # degree_counts = {}
     # for degree in degrees:
