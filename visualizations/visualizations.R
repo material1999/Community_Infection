@@ -438,41 +438,6 @@ combined_plot <- plot6 + plot_spacer() + plot7 + plot_spacer() + plot8 +
 
 ggsave("visualizations/combined_plot_community_value.png", combined_plot, width = 21, height = 6)
 
-############################## FULL VS NARROW ##############################
-
-long_data <- melt(greedy_narrow_20_cascade, variable.name = "parameters", value.name = "result")
-long_data <- subset(long_data, result != "xxxxx")
-long_data$result <- as.numeric(long_data$result)
-long_data$row <- rep(1:nrow(greedy_narrow_20_cascade),
-                     times = ncol(greedy_narrow_20_cascade))[1:nrow(long_data)]
-
-plot4 <- ggplot(long_data, aes(x = factor(row), y = result)) +
-  geom_boxplot(outlier.color = "red") +
-  labs(x = "Graphs", y = "Result",
-       title = "Range of Results per Graph Across Parameter Combinations") +
-  scale_x_discrete(breaks = seq(1, 108, by = 107)) +
-  theme_minimal() +
-  theme(plot.background = element_rect(fill = "white"))
-
-summary_data <- long_data %>%
-  group_by(row) %>%
-  summarise(min_result = min(result, na.rm = TRUE),
-            max_result = max(result, na.rm = TRUE))
-
-target_values <- greedy_full[[1]]
-summary_data$target <- target_values
-
-plot5 <- ggplot(summary_data, aes(x = row)) +
-  geom_ribbon(aes(ymin = min_result, ymax = max_result, fill = "Result Range"), alpha = 0.5) +
-  geom_line(aes(y = (min_result + max_result) / 2, color = "Average Result"), size = 0.5) +
-  geom_line(aes(y = target, color = "Target Value"), size = 0.5) +
-  labs(x = "Graphs", y = "Result Range",
-       title = "Range of Results per Graph Across Parameter Combinations", 
-       fill = "Legend", color = "Legend") +
-  scale_x_continuous(breaks = seq(1, 108, by = 107)) +
-  theme_minimal() +
-  theme(plot.background = element_rect(fill = "white"))
-
 ############################## NARROW BREAKDOWN CASCADE MU ##############################
 keep <- data.frame(
   ON = numeric(),
@@ -941,4 +906,221 @@ plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Ste
 
 ggsave("visualizations/plot_runtime.png", plot_comparison_of_runtimes, width = 8, height = 6)
 
-############################## TODO ##############################
+############################## COMPARISON OF INFLUENCE VALUES CITHEP ##############################
+
+data <- data.frame(
+  Settings = rep(c("Community values (best)", "Narrow greedy (best)", "Full greedy"), each = 3),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), times = 3),
+  Value = c(1776.47, 691.80, 247.16, 4304.14, 1013.97, 657.99, 4289.16, 1006.66, 720.45)
+)
+
+data$Settings <- factor(data$Settings, levels = c("Community values (best)", "Narrow greedy (best)", "Full greedy"))
+
+plot_comparison_of_influence_values <- ggplot(data, aes(x = Model, y = Value, fill = Settings)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal(base_size = 15) +
+  labs(
+    x = "Model",
+    y = "Average Influence Value"
+  ) +
+  scale_fill_manual(
+    values = c("#70AD47", "#FFC000", "#ED7D31")
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave("visualizations/plot_performance_cithep.png", plot_comparison_of_influence_values, width = 8, height = 6)
+
+
+
+############################## COMPARISON OF RUNTIMES CITHEP ##############################
+
+data <- data.frame(
+  Steps = c(
+    "Influence graphs", "Community detection", "Narrow greedy", 
+    "Full greedy", "Influence graphs", "Community detection", 
+    "Narrow greedy", "Full greedy", "Influence graphs", 
+    "Community detection", "Narrow greedy", "Full greedy"
+  ),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), each = 4),
+  Value = c(5966, 348, 4743, 35857, 1654, 484, 1095, 5094, 2181, 1343, 665, 4857),
+  Type = rep(c("Stacked", "Stacked", "Stacked", "Full greedy"), times = 3)
+)
+
+data$Steps <- factor(data$Steps, levels = c("Narrow greedy", "Community detection", "Influence graphs", "Full greedy"))
+
+plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Steps)) +
+  geom_bar(data = subset(data, Type == "Stacked"), 
+           aes(x = Model, fill = Steps), 
+           stat = "identity", position = "stack", width = 0.4,
+           just = 1) +
+  geom_bar(data = subset(data, Type == "Full greedy"), 
+           aes(x = Model, fill = "Full greedy"),
+           stat = "identity", position = position_dodge(width = 1), width = 0.4,
+           just = 0) +
+  theme_minimal(base_size = 15) +
+  labs(
+    x = "Model",
+    y = "Runtime (seconds)",
+    fill = "Steps"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Influence graphs" = "#5F5F5F",
+      "Community detection" = "#5A9BD5",
+      "Narrow greedy" = "#FFC000",
+      "Full greedy" = "#ED7D31"
+    )
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave("visualizations/plot_runtime_cithep.png", plot_comparison_of_runtimes, width = 8, height = 6)
+
+############################## COMPARISON OF INFLUENCE VALUES SOCEPINIONS ##############################
+
+data <- data.frame(
+  Settings = rep(c("Community values (best)", "Narrow greedy (best)", "Full greedy"), each = 3),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), times = 3),
+  Value = c(10343.85, 232.29, 839.56, 10337.01, 3037.17, 838.89, 10464.61, 3615.53, 1386.21)
+)
+
+data$Settings <- factor(data$Settings, levels = c("Community values (best)", "Narrow greedy (best)", "Full greedy"))
+
+plot_comparison_of_influence_values <- ggplot(data, aes(x = Model, y = Value, fill = Settings)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal(base_size = 15) +
+  labs(
+    x = "Model",
+    y = "Average Influence Value"
+  ) +
+  scale_fill_manual(
+    values = c("#70AD47", "#FFC000", "#ED7D31")
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave("visualizations/plot_performance_socepinions.png", plot_comparison_of_influence_values, width = 8, height = 6)
+
+
+
+############################## COMPARISON OF RUNTIMES SOCEPINIONS ##############################
+
+data <- data.frame(
+  Steps = c(
+    "Influence graphs", "Community detection", "Narrow greedy", 
+    "Full greedy", "Influence graphs", "Community detection", 
+    "Narrow greedy", "Full greedy", "Influence graphs", 
+    "Community detection", "Narrow greedy", "Full greedy"
+  ),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), each = 4),
+  Value = c(10443, 9212, 575, 294897, 2564, 2436, 8711, 48087, 5302, 4272, 169, 26481),
+  Type = rep(c("Stacked", "Stacked", "Stacked", "Full greedy"), times = 3)
+)
+
+data$Steps <- factor(data$Steps, levels = c("Narrow greedy", "Community detection", "Influence graphs", "Full greedy"))
+
+plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Steps)) +
+  geom_bar(data = subset(data, Type == "Stacked"), 
+           aes(x = Model, fill = Steps), 
+           stat = "identity", position = "stack", width = 0.4,
+           just = 1) +
+  geom_bar(data = subset(data, Type == "Full greedy"), 
+           aes(x = Model, fill = "Full greedy"),
+           stat = "identity", position = position_dodge(width = 1), width = 0.4,
+           just = 0) +
+  theme_minimal(base_size = 15) +
+  labs(
+    x = "Model",
+    y = "Runtime (seconds)",
+    fill = "Steps"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Influence graphs" = "#5F5F5F",
+      "Community detection" = "#5A9BD5",
+      "Narrow greedy" = "#FFC000",
+      "Full greedy" = "#ED7D31"
+    )
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave("visualizations/plot_runtime_socepinions.png", plot_comparison_of_runtimes, width = 8, height = 6)
+
+############################## COMPARISON OF INFLUENCE VALUES EMAILEUALL ##############################
+
+data <- data.frame(
+  Settings = rep(c("Community values (best)", "Narrow greedy (best)", "Full greedy"), each = 3),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), times = 3),
+  Value = c(7021.69, 563.97, 949.39, 7371.71, 2317.14, 1328.67, 7410.67, 2290.82, 1620.68)
+)
+
+data$Settings <- factor(data$Settings, levels = c("Community values (best)", "Narrow greedy (best)", "Full greedy"))
+
+plot_comparison_of_influence_values <- ggplot(data, aes(x = Model, y = Value, fill = Settings)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal(base_size = 15) +
+  labs(
+    x = "Model",
+    y = "Average Influence Value"
+  ) +
+  scale_fill_manual(
+    values = c("#70AD47", "#FFC000", "#ED7D31")
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave("visualizations/plot_performance_emaileuall.png", plot_comparison_of_influence_values, width = 8, height = 6)
+
+
+
+############################## COMPARISON OF RUNTIMES EMAILEUALL ##############################
+
+data <- data.frame(
+  Steps = c(
+    "Influence graphs", "Community detection", "Narrow greedy", 
+    "Full greedy", "Influence graphs", "Community detection", 
+    "Narrow greedy", "Full greedy", "Influence graphs", 
+    "Community detection", "Narrow greedy", "Full greedy"
+  ),
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), each = 4),
+  Value = c(10663, 6917, 13598, 561009, 5358, 3145, 16982, 91434, 10666, 3018, 527, 82637),
+  Type = rep(c("Stacked", "Stacked", "Stacked", "Full greedy"), times = 3)
+)
+
+data$Steps <- factor(data$Steps, levels = c("Narrow greedy", "Community detection", "Influence graphs", "Full greedy"))
+
+plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Steps)) +
+  geom_bar(data = subset(data, Type == "Stacked"), 
+           aes(x = Model, fill = Steps), 
+           stat = "identity", position = "stack", width = 0.4,
+           just = 1) +
+  geom_bar(data = subset(data, Type == "Full greedy"), 
+           aes(x = Model, fill = "Full greedy"),
+           stat = "identity", position = position_dodge(width = 1), width = 0.4,
+           just = 0) +
+  theme_minimal(base_size = 15) +
+  labs(
+    x = "Model",
+    y = "Runtime (seconds)",
+    fill = "Steps"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Influence graphs" = "#5F5F5F",
+      "Community detection" = "#5A9BD5",
+      "Narrow greedy" = "#FFC000",
+      "Full greedy" = "#ED7D31"
+    )
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
+
+ggsave("visualizations/plot_runtime_emaileuall.png", plot_comparison_of_runtimes, width = 8, height = 6)
