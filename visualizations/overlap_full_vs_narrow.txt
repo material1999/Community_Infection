@@ -1,0 +1,15 @@
+cascade: 36.64815%
+threshold: 38.25926%
+onlylistenonce: 16.76636%
+
+cithep - cascade: 54%
+cithep - threshold: 80%
+cithep - onlylistenonce: 44%
+
+socepinions - cascade: 0%
+socepinions - threshold: 44%
+socepinions - onlylistenonce: 12%
+
+emaileuall - cascade: 52%
+emaileuall - threshold: 84%
+emaileuall - onlylistenonce: 52%
