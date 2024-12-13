@@ -1124,3 +1124,33 @@ plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Ste
   )
 
 ggsave("visualizations/plot_runtime_emaileuall.png", plot_comparison_of_runtimes, width = 8, height = 6)
+
+############################## COMPARISON OF OVERLAPS ##############################
+
+data <- data.frame(
+  Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"), each = 4),
+  Graph = rep(c("Artificial (avg)", "cit-HepPh", "soc-Epinions1", "email-EuAll"), times = 3),
+  Value = c(36.64815, 54, 0, 52,
+            38.25926, 80, 44, 84,
+            16.76636, 44, 12, 52)
+)
+
+data$Model <- factor(data$Model, levels = c("Independent Cascade", "Linear Threshold", "Only-Listen-Once"))
+data$Graph <- factor(data$Graph, levels = c("Artificial (avg)", "cit-HepPh", "soc-Epinions1", "email-EuAll"))
+
+plot_overlap <- ggplot(data, aes(x = Model, y = Value, fill = Graph)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Model",
+       y = "Overlap (percentage)",
+       fill = "Graph") +
+  scale_fill_manual(
+    values = c(
+      "Artificial (avg)" = "#E8DCD0",
+      "cit-HepPh" = "#D4C0AB",
+      "soc-Epinions1" = "#C19E77",
+      "email-EuAll" = "#91683C"
+    )
+  ) +
+  theme_minimal(base_size = 15)
+
+ggsave("visualizations/plot_overlap.png", plot_overlap, width = 12, height = 6)
