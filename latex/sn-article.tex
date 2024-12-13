@@ -407,27 +407,6 @@ As a proof-of-concept approach, we use our novel community detection method to r
 
 We begin our evaluation on the networks introduced in Section 4.1. First, we run the influence simulation algorithm described in \ref{subsec_infsim} to create the influence graphs that will be used as the input for our community detection method. We proceed with this for all three selected influence models. Regarding the parameters, we select the number of iterations to be $I = 10000$ and the maximum influence distance is set to $d_{max} = 2$. After creating the influence graphs, we draw the following inferences: there is 1. a considerable increase in the densities (number of edges) and average clustering coefficients and 2. a noticable decrease in the diameters and average edge weights compared to the input graphs. These observations can easily be explained with the characteristics of Algorithm \ref{algo_inf_sim}: in the influence graphs, every directed influence path from each simulation is taken into consideration, thereby creating additional edges compared to the original graph.
 
-\begin{comment}
-\begin{table}[ht]
-\caption{Input and influence graph attributes}
-\label{table_influence_graphs}
-\begin{tabular}{@{}l|c|ccc@{}}
-\toprule
-& Input graphs & & Influence graphs & \\
-Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Num. of nodes & $1000$ & $1000$ & $1000$ & $1000$ \\
-Num. of edges & $\sim8000$ & $\sim39000\text{--}53000$ & $\sim39000\text{--}53000$ & $\sim39000\text{--}53000$ \\
-Avg. edge weight & $0.1$ & $0.03$ & $0.029$ & $0.012$ \\
-Diameter & $6.194$ & $3.203$ & $3.194$ & \#\#\#\footnotemark[1] \\
-Density & $0.007$ & $0.05$ & $0.05$ & $0.05$\\
-Avg. clustering coeff. & $0.035$ & $0.228$ & $0.228$ & $0.228$ \\
-\bottomrule
-\end{tabular}
-\footnotetext[1]{Most of the influence graphs are not strongly connected for the Only-Listen-Once model, thus the diameter attribute is incomprehensible for this case.}
-\end{table}
-\end{comment}
-
 Regarding community detection, there are few quantitative metrics that can be analysed without actually using the community values in Algorithm \ref{algo_greedy_narrow}. Our primary observation is that different values set for the two hyperparameters $cp$ and $ta$ substantively affect runtime. Consequently, a timeout threshold is implemented to disregard any executions exceeding this time limit. For the Independent Cascade and Linear Threshold models, we throw away at around $10\%$ of the results due to long runtime. However, this is a drastically larger $60\%$ when the Only-Listen Once model is used for community detection. Our explanation for this phenomenon is that the average edge weights in the influence graphs for this model are relatively small compared to the others.
 
 After locating overlapping communities in our networks, we can calculate the community values for each node and sort them in descending order. Then, we use this ordering of vertices to narrow the search space of the greedy influence maximization algorithm. In our evaluation, we select $K = 50$ nodes from $1000$ (5\%) in each graph and run influence simulations with these nodes being initially active. In each simulation, we count how many nodes become active and after every iteration is done, we calculate the average final influence value for the graph. The goal is to achieve as high final influence values as possible.
@@ -469,49 +448,7 @@ As we can see, there are no distinct patterns that can be explicitly identified.
 
 Figure \ref{fig_performance} shows a performance comparison of different settings and models. We take the highest final influence values for each graph in each setting, and calculate an average value. Our main observation is that our \textit{Greedy narrow} setting achieves considerably better results than the \textit{Community values} setting, and is just a little worse than the \textit{Greedy full} setting. These results confirm our hypothesis that vertices with significant community roles are of utmost importance in solving the influence maximization problem.
 
-\begin{comment}
-\begin{table}[ht]
-\caption{Average final influence value comparison across models}
-\label{table_performance_comparison}
-\begin{tabular}{@{}l|ccc@{}}
-\toprule
-Steps & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Community values (best)\footnotemark[2] & $147.82$ & $156.96$ & $65.63$ \\
-Narrow greedy (best)\footnotemark[2] & $170.32$ & $183.30$ & $74.49$ \\
-Full greedy & $173.42$ & $186.09$ & $78.55$ \\
-\midrule
-Improvement vs. Full greedy & $-1.79\%$ & $-1.50\%$ & $-5.17\%$ \\
-Improvement vs. Community values & $15.22\%$ & $16.78\%$ & $13.50\%$ \\
-\bottomrule
-\end{tabular}
-\footnotetext[2]{Average of the final influence values with the best community detection hyperparameters for different models and settings.}
-\end{table}
-\end{comment}
-
 One notable advanatage of the \textit{Narrow greedy} setting using our novel community detection algorithm is its runtime. Figure \ref{fig_runtimes} demonstrates the average seconds required for each step in the pipeline, and their sum compared to the average runtime of the \textit{Full greedy} setting. For two of the three influence models, we managed to save substantial amounts of execution time in exchange for a marginal performance loss.
-
-\begin{comment}
-\begin{table}[ht]
-\caption{Average runtime of different steps (in seconds)}
-\label{table_runtimes}
-\begin{tabular}{@{}l|ccc@{}}
-\toprule
-Steps & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Influence graphs & $103$ & $48$ & $31$ \\
-Community detection (best)\footnotemark[3] & $16$ & $34$ & $139$ \\
-Narrow greedy (best)\footnotemark[3] & $158$ & $74$ & $51$ \\
-\midrule
-Sum & $\mathbf{277}$ & $\mathbf{156}$ & $221$ \\
-Full greedy & $374$ & $262$ & $\mathbf{128}$ \\
-\midrule
-Runtime improvement & $25.94\%$ & $40.46\%$ & $-72.66\%$ \\
-\bottomrule
-\end{tabular}
-\footnotetext[3]{Average runtime of the community detection algorithm with the hyperparameters that provided the highest expected final influence results when narrowing the search space of the greedy method.}
-\end{table}
-\end{comment}
 
 \begin{figure}[ht]
 \centering
@@ -528,6 +465,8 @@ Runtime improvement & $25.94\%$ & $40.46\%$ & $-72.66\%$ \\
 \end{minipage}
 \end{figure}
 
+\colorbox{pink}{TODO: overlap comparison}
+
 %%===============================%%
 %% Results on real-life networks %%
 %%===============================%%
@@ -538,64 +477,11 @@ We follow the same evaluation process for our real-life benchmark networks as we
 
 To create the influence graphs, we use exactly the same parameters as we set for the smaller artificial networks. The number of iterations is $I = 10000$ and the maximum influence distance is set to $d_{max} = 2$ for each benchmark graph. Similar characteristics can be discovered for the real-life networks if we compare our results to the artificially generated ones: the influence graphs are notably denser and their average edge weights are considerably smaller compared to the input networks. One difference, however, is that none of the chosen real-life input graphs are strongly connected, making all of the influence graphs falling into multiple components as well.
 
-\begin{comment}
-\begin{table}[ht]
-\caption{Input and influence graph attributes: cit-HepPh}
-\label{table_influence_graphs_cithep}
-\begin{tabular}{@{}l|c|ccc@{}}
-\toprule
-& Input graph & & Influence graph & \\
-Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Num. of nodes & $34546$ & $34546$ & $34546$ & $34546$ \\
-Num. of edges & $421578$ & $3787811$ & $3263196$ & $3831125$ \\
-Avg. edge weight & $0.1$ & $0.02830$ & $0.00792$ & $0.01789$ \\
-Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
-Density & $0.00035$ & $0.00317$ & $0.00273$ & $0.00321$ \\
-Avg. clustering coeff. & $0.143264$ & $0.14141$ & $0.13350$ & $0.14177$ \\
-\bottomrule
-\end{tabular}
-\vspace{5mm}
-\caption{Input and influence graph attributes: soc-Epinions1}
-\label{table_influence_graphs_socepinions}
-\begin{tabular}{@{}l|c|ccc@{}}
-\toprule
-& Input graph & & Influence graph & \\
-Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Num. of nodes & $75879$ & $75879$ & $75879$ & $75879$ \\
-Num. of edges & $508837$ & $20459651$ & $12381456$ & $20708694$ \\
-Avg. edge weight & $0.1$ & $0.02190$ & $0.00239$ & $0.01258$ \\
-Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
-Density & $0.00009$ & $0.00355$ & $0.00216$ & $0.00360$ \\
-Avg. clustering coeff. & $0.11017$ & $0.60517$ & $0.48419$ & $0.60845$ \\
-\bottomrule
-\end{tabular}
-\vspace{5mm}
-\caption{Input and influence graph attributes: email-EuAll}
-\label{table_influence_graphs_emaileuall}
-\begin{tabular}{@{}l|c|ccc@{}}
-\toprule
-& Input graph & & Influence graph & \\
-Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Num. of nodes & $265214$ & $265214$ & $265214$ & $265214$ \\
-Num. of edges & $420045$ & $45584632$ & $21376948$ & $46321475$ \\
-Avg. edge weight & $0.1$ & $0.01193$ & $0.00085$ & $0.00689$ \\
-Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
-Density & $0.00001$ & $0.00065$ & $0.00034$ & $0.00066$ \\
-Avg. clustering coeff. & $0.05647$ & $0.51522$ & $0.30841$ & $0.51980$ \\
-\bottomrule
-\end{tabular}
-\footnotetext[1]{The input and influence graphs are not strongly connected, thus the diameter attribute is incomprehensible for these cases.}
-\end{table}
-\end{comment}
+For community detection, hyperparameter fine-tuning in this scenario is even more crucial thanks to the magnitude of nodes and edges in our chosen graphs. Instead of implementing timeouts with a threshold value, a more drastic heuristic is considered. When expanding the community initiatives, only a predefined number of neighbors are tested. This way, some communities might not be found instantly, but we hope that the most important structures will still be enough for our solution. For the smallest \textit{cit-HepPh} network, this $n_{max}$ parameter is set to 50, and for the other two bigger ones, namely \textit{soc-Epinions1} and \textit{email-EuAll}, $n_{max} = 25$ is used. Still, few quantitative metrics can be analysed here without using our communities for narrowing the search space in Algorithm \ref{algo_greedy_narrow}. In our analysis regarding performance and runtime, the settings are the same as defined in Section \ref{subsec_res_artificial} earlier. We want to highlight that in the \textit{Narrow greedy} setting, we still use $20\%$ of nodes to narrow the search space, which means different values for each real-life network (based on their number of nodes).
 
-For community detection, hyperparameter fine-tuning in this scenario is even more crucial thanks to the magnitude of nodes and edges. Instead of implementing timeouts with a threshold value, a more drastic heuristic is considered. When expanding the community initiatives, only a predefined number of neighbors are tested. This way some communities might not be found instantly, but we hope that the most important structures will still be enough for our solution. For the smallest \textit{cit-HepPh} network, this $n_{max}$ parameter is set to 50, and for the other two bigger ones, namely \textit{soc-Epinions1} and \textit{email-EuAll}, $n_{max} = 25$ is used. Still, few quantitative metrics can be analysed here without using our communities for narrowing the search space in Algorithm \ref{algo_greedy_narrow}. In our analysis regarding performance and runtime, the settings are the same as defined in Section \ref{subsec_res_artificial} earlier. We want to highlight that in the \textit{Narrow greedy} setting, we still use $20\%$ of nodes to narrow the search space, which means different values for each real-life network (based on their number of nodes).
+After overlapping communities are found, we can calculate the community values for each node in our networks and sort them in descending order. This ordering of vertices is then used to narrow the search space of the greedy influence maximization algorithm. We try to select $K = 50$ nodes in each graph and run influence simulations with these nodes being initially active. At the end of each simulation, the number of active nodes is counted. After every iteration is done, we calculate an average final influence value for the graph. The goal of the initial vertex selection is to achieve as high final influence values as possible at the end of the whole process.
 
-After overlapping communities are found, we can calculate the community values for each node in our networks and sort them in descending order. This ordering of vertices is then used to narrow the search space of the greedy influence maximization algorithm. We try to select $K = 50$ nodes in each graph and run influence simulations with these nodes being initially active. At the end of each simulation, the number of active nodes is counted. After every iteration finishes, we calculate an average final influence value for the graph. The goal of the initial vertex selection is to achieve as high final influence values as possible at the end of the whole process.
-
-Fine-tuning the two hyperparameters $cp$ and $ta$ of our community detection algorithm is also an important challenge. Instead of 5-5 possible values for both variables, we experiment with 3-3 possibilities, resulting in 9 community results in total for each graph. Then, we execute the \textit{Narrow greedy} on each of the community results and take the hyperparameter combination that belongs to the highest average final influence value. We proceed similalrly with the \textit{Community values} setting. Tables \ref{table_best_combinations_narrow_big} and \ref{table_best_combinations_community_values_big} show which combinations turn out to be the best for different models to maximize influence in these settings. It turns out that very distinct choices of hyperparameters produce the best final infection results in each setting, there are even differences between the settings for the same graphs.
+Fine-tuning the two hyperparameters $cp$ and $ta$ of our community detection algorithm is also an important challenge. Instead of 5-5 possible values for both variables, we experiment with 3-3 possibilities, resulting in 9 community results in total for each graph. Then, we execute the \textit{Narrow greedy} on each of the community results and take the hyperparameter combination that belongs to the highest average final influence value. We proceed similalrly with the \textit{Community values} setting. Tables \ref{table_best_combinations_narrow_big} and \ref{table_best_combinations_community_values_big} show which combinations turn out to be the best for different models to maximize influence in these settings. It turns out that very distinct choices of hyperparameters produce the best final infection results in each setting, there are huge differences even between the settings for the same graphs.
 
 \begin{table}[ht]
 \caption{Best parameter combinations for each graph and influence model for the \textit{Narrow greedy} setting}
@@ -625,111 +511,57 @@ email-EuAll & ($cp=0.75$, $ta=15.5$) & ($cp=0.8$, $ta=45$) & ($cp=0.75$, $ta=24.
 \end{tabular}
 \end{table}
 
-Tables \ref{table_performance_comparison_cithep}, \ref{table_performance_comparison_socepinions} and \ref{table_performance_comparison_emaileuall} compare the final influence values of our defined settings, each graph separately. For these bigger networks, the \textit{Community values} setting performs noticeably worse compared to the other two settings. This was not the case for the artificially generated small graphs, the results are closer to each other in Section \ref{subsec_res_artificial}. If we look at the \textit{Narrow greedy} setting, the results emphasize our intuition again, that is significant community roles should be taken into consideration when selecting initially active nodes in the influence maximization problem. Our finding to highlight is that the \textit{Narrow greedy} produces way better results in most cases compared to the \textit{Community values} setting, while also being close to the \textit{Full greedy} results.
+Figures \ref{fig_performance_cithep}, \ref{fig_performance_socepinions} and \ref{fig_performance_emaileuall} compare the final influence values of our defined settings, each graph separately. For these bigger networks, the \textit{Community values} setting performs noticeably worse compared to the other two settings. This was not the case for the artificially generated small graphs, the results are closer to each other in Section \ref{subsec_res_artificial}. If we look at the \textit{Narrow greedy} setting, the results emphasize our intuition again, that is significant community roles should be taken into consideration when selecting initially active nodes in the influence maximization problem. Our finding to highlight is that the \textit{Narrow greedy} produces way better results in most cases compared to the \textit{Community values} setting, while also being close to the \textit{Full greedy} results.
 
-\begin{table}[ht]
-\caption{Final influence value comparison across models: cit-HepPh}
-\label{table_performance_comparison_cithep}
-\begin{tabular}{@{}l|ccc@{}}
-\toprule
-Settings & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Community values (best)\footnotemark[5] & $1776.47$ & $691.80$ & $247.16$ \\
-Narrow greedy (best)\footnotemark[5] & $4304.14$ & $1013.97$ & $657.99$ \\
-Full greedy & $4289.16$ & $1006.66$ & $720.45$ \\
-\midrule
-Improvement vs. Full greedy & $0.35\%$ & $-0.73\%$ & $-8.67\%$ \\
-Improvement vs. Community values & $142.29\%$ & $46.57\%$ & $166.22\%$ \\
-\bottomrule
-\end{tabular}
-\vspace{5mm}
-\caption{Final influence value comparison across models: soc-Epinions1}
-\label{table_performance_comparison_socepinions}
-\begin{tabular}{@{}l|ccc@{}}
-\toprule
-Settings & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Community values (best)\footnotemark[5] & $10343.85$ & $232.29$ & $839.56$ \\
-Narrow greedy (best)\footnotemark[5] & $10337.01$ & $3037.17$ & $838.89$ \\
-Full greedy & $10464.61$ & $3615.53$ & $1386.21$ \\
-\midrule
-Improvement vs. Full greedy & $-1.22\%$ & $-15.99\%$ & $-39.48\%$ \\
-Improvement vs. Community values & $-0.07\%$ & $1207.49\%$ & $-0.08\%$ \\
-\bottomrule
-\end{tabular}
-\vspace{5mm}
-\caption{Final influence value comparison across models: email-EuAll}
-\label{table_performance_comparison_emaileuall}
-\begin{tabular}{@{}l|ccc@{}}
-\toprule
-Settings & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Community values (best)\footnotemark[5] & $7021.69$ & $563.97$ & $949.39$ \\
-Narrow greedy (best)\footnotemark[5] & $7371.71$ & $2317.14$ & $1328.67$ \\
-Full greedy & $7410.67$ & $2290.82$ & $1620.68$ \\
-\midrule
-Improvement vs. Full greedy & $-0.53\%$ & $1.15\%$ & $-18.02\%$ \\
-Improvement vs. Community values & $4.98\%$ & $310.86\%$ & $39.95\%$ \\
-\bottomrule
-\end{tabular}
-\footnotetext[5]{Final influence values with the best community detection hyperparameters for different models and settings.}
-\end{table}
+Fortunately, our runtime statistics are also promising. Figures \ref{fig_runtimes_cithep}, \ref{fig_runtimes_socepinions} and \ref{fig_runtimes_emaileuall} showcase that extensive amounts of runtimes can be saved with the \textit{Narrow greedy} setting compared to the \textit{Full greedy} setting. In our testing, we observe a positive correlation between the size and density of the network and the corresponding time savings.
 
-Fortunately, our runtime statistics are also promising. Tables \ref{table_runtimes_big_cithep}, \ref{table_runtimes_big_socepinions} and \ref{table_runtimes_big_emaileuall} showcase that extensive amounts of runtimes can be saved with the \textit{Narrow greedy} setting compared to the \textit{Full greedy} setting. In our testing, we observe a positive correlation between the size and density of the network and the corresponding time savings.
+\begin{figure}[ht]
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{plots/plot_performance_cithep.png}
+\caption{Comparison of final influence values across models: cit-HepPh}
+\label{fig_performance_cithep}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{plots/plot_runtime_cithep.png}
+\caption{Average runtime of different steps across models: cit-HepPh}
+\label{fig_runtimes_cithep}
+\end{minipage}
+\vspace{5mm}
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{plots/plot_performance_socepinions.png}
+\caption{Comparison of final influence values across models: soc-Epinions1}
+\label{fig_performance_socepinions}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{plots/plot_runtime_socepinions.png}
+\caption{Average runtime of different steps across models: soc-Epinions1}
+\label{fig_runtimes_socepinions}
+\end{minipage}
+\vspace{5mm}
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{plots/plot_performance_emaileuall.png}
+\caption{Comparison of final influence values across models: email-EuAll}
+\label{fig_performance_emaileuall}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{plots/plot_runtime_emaileuall.png}
+\caption{Average runtime of different steps across models: email-EuAll}
+\label{fig_runtimes_emaileuall}
+\end{minipage}
+\end{figure}
 
-\begin{table}[ht]
-\caption{Runtime of different steps (in seconds): cit-HepPh}
-\label{table_runtimes_big_cithep}
-\begin{tabular}{@{}lccc@{}}
-\toprule
-Influence model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Influence graphs & $5966$ & $1654$ & $2181$ \\
-Community detection (best)\footnotemark[4] & $348$ & $484$ & $1343$ \\
-Narrow greedy (best)\footnotemark[4] & $4743$ & $1095$ & $665$ \\
-\midrule
-Sum & $\mathbf{11057}$ & $\mathbf{3233}$ & $\mathbf{4189}$ \\
-Full greedy & $35857$ & $5094$ & $4857$ \\
-\midrule
-Runtime improvement & $69.16\%$ & $36.53\%$ & $13.75\%$ \\
-\bottomrule
-\end{tabular}
-\vspace{5mm}
-\caption{Runtime of different steps (in seconds): soc-Epinions1}
-\label{table_runtimes_big_socepinions}
-\begin{tabular}{@{}lccc@{}}
-\toprule
-Influence model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Influence graphs & $10443$ & $2564$ & $5302$ \\
-Community detection (best)\footnotemark[4] & $9212$ & $2436$ & $4272$ \\
-Narrow greedy (best)\footnotemark[4] & $575$ & $8711$ & $169$ \\
-\midrule
-Sum & $\mathbf{20230}$ & $\mathbf{13711}$ & $\mathbf{9743}$ \\
-Full greedy & $294897$ & $48087$ & $26481$ \\
-\midrule
-Runtime improvement & $93.14\%$ & $71.49\%$ & $63.20\%$ \\
-\bottomrule
-\end{tabular}
-\vspace{5mm}
-\caption{Runtime of different steps (in seconds): email-EuAll}
-\label{table_runtimes_big_emaileuall}
-\begin{tabular}{@{}lccc@{}}
-\toprule
-Influence model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
-\midrule
-Influence graphs & $10663$ & $5358$ & $10666$ \\
-Community detection (best)\footnotemark[4] & $6917$ & $3145$ & $3018$ \\
-Narrow greedy (best)\footnotemark[4] & $13598$ & $16982$ & $527$ \\
-\midrule
-Sum & $\mathbf{31178}$ & $\mathbf{25485}$ & $\mathbf{14211}$ \\
-Full greedy & $561009$ & $91434$ & $82637$ \\
-\midrule
-Runtime improvement & $94.44\%$ & $72.13\%$ & $82.80\%$ \\
-\bottomrule
-\end{tabular}
-\footnotetext[4]{Runtime of the community detection algorithm with the hyperparameters that provided the highest expected final influence results when narrowing the search space of the greedy method.}
-\end{table}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{plots/plot_overlap.png}
+\caption{Overlap of \textit{Full greedy} and best \textit{Narrow greedy} selections}
+\label{fig_overlap}
+\end{figure}
 
 %%============%%
 %% Discussion %%

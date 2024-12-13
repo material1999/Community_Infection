@@ -1,0 +1,221 @@
+\begin{comment}
+\begin{table}[ht]
+\caption{Average runtime of different steps (in seconds)}
+\label{table_runtimes}
+\begin{tabular}{@{}l|ccc@{}}
+\toprule
+Steps & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Influence graphs & $103$ & $48$ & $31$ \\
+Community detection (best)\footnotemark[3] & $16$ & $34$ & $139$ \\
+Narrow greedy (best)\footnotemark[3] & $158$ & $74$ & $51$ \\
+\midrule
+Sum & $\mathbf{277}$ & $\mathbf{156}$ & $221$ \\
+Full greedy & $374$ & $262$ & $\mathbf{128}$ \\
+\midrule
+Runtime improvement & $25.94\%$ & $40.46\%$ & $-72.66\%$ \\
+\bottomrule
+\end{tabular}
+\footnotetext[3]{Average runtime of the community detection algorithm with the hyperparameters that provided the highest expected final influence results when narrowing the search space of the greedy method.}
+\end{table}
+\end{comment}
+
+\begin{comment}
+\begin{table}[ht]
+\caption{Average final influence value comparison across models}
+\label{table_performance_comparison}
+\begin{tabular}{@{}l|ccc@{}}
+\toprule
+Steps & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Community values (best)\footnotemark[2] & $147.82$ & $156.96$ & $65.63$ \\
+Narrow greedy (best)\footnotemark[2] & $170.32$ & $183.30$ & $74.49$ \\
+Full greedy & $173.42$ & $186.09$ & $78.55$ \\
+\midrule
+Improvement vs. Full greedy & $-1.79\%$ & $-1.50\%$ & $-5.17\%$ \\
+Improvement vs. Community values & $15.22\%$ & $16.78\%$ & $13.50\%$ \\
+\bottomrule
+\end{tabular}
+\footnotetext[2]{Average of the final influence values with the best community detection hyperparameters for different models and settings.}
+\end{table}
+\end{comment}
+
+\begin{comment}
+\begin{table}[ht]
+\caption{Input and influence graph attributes}
+\label{table_influence_graphs}
+\begin{tabular}{@{}l|c|ccc@{}}
+\toprule
+& Input graphs & & Influence graphs & \\
+Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Num. of nodes & $1000$ & $1000$ & $1000$ & $1000$ \\
+Num. of edges & $\sim8000$ & $\sim39000\text{--}53000$ & $\sim39000\text{--}53000$ & $\sim39000\text{--}53000$ \\
+Avg. edge weight & $0.1$ & $0.03$ & $0.029$ & $0.012$ \\
+Diameter & $6.194$ & $3.203$ & $3.194$ & \#\#\#\footnotemark[1] \\
+Density & $0.007$ & $0.05$ & $0.05$ & $0.05$\\
+Avg. clustering coeff. & $0.035$ & $0.228$ & $0.228$ & $0.228$ \\
+\bottomrule
+\end{tabular}
+\footnotetext[1]{Most of the influence graphs are not strongly connected for the Only-Listen-Once model, thus the diameter attribute is incomprehensible for this case.}
+\end{table}
+\end{comment}
+
+\begin{comment}
+\begin{table}[ht]
+\caption{Input and influence graph attributes: cit-HepPh}
+\label{table_influence_graphs_cithep}
+\begin{tabular}{@{}l|c|ccc@{}}
+\toprule
+& Input graph & & Influence graph & \\
+Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Num. of nodes & $34546$ & $34546$ & $34546$ & $34546$ \\
+Num. of edges & $421578$ & $3787811$ & $3263196$ & $3831125$ \\
+Avg. edge weight & $0.1$ & $0.02830$ & $0.00792$ & $0.01789$ \\
+Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
+Density & $0.00035$ & $0.00317$ & $0.00273$ & $0.00321$ \\
+Avg. clustering coeff. & $0.143264$ & $0.14141$ & $0.13350$ & $0.14177$ \\
+\bottomrule
+\end{tabular}
+\vspace{5mm}
+\caption{Input and influence graph attributes: soc-Epinions1}
+\label{table_influence_graphs_socepinions}
+\begin{tabular}{@{}l|c|ccc@{}}
+\toprule
+& Input graph & & Influence graph & \\
+Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Num. of nodes & $75879$ & $75879$ & $75879$ & $75879$ \\
+Num. of edges & $508837$ & $20459651$ & $12381456$ & $20708694$ \\
+Avg. edge weight & $0.1$ & $0.02190$ & $0.00239$ & $0.01258$ \\
+Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
+Density & $0.00009$ & $0.00355$ & $0.00216$ & $0.00360$ \\
+Avg. clustering coeff. & $0.11017$ & $0.60517$ & $0.48419$ & $0.60845$ \\
+\bottomrule
+\end{tabular}
+\vspace{5mm}
+\caption{Input and influence graph attributes: email-EuAll}
+\label{table_influence_graphs_emaileuall}
+\begin{tabular}{@{}l|c|ccc@{}}
+\toprule
+& Input graph & & Influence graph & \\
+Attributes & No model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Num. of nodes & $265214$ & $265214$ & $265214$ & $265214$ \\
+Num. of edges & $420045$ & $45584632$ & $21376948$ & $46321475$ \\
+Avg. edge weight & $0.1$ & $0.01193$ & $0.00085$ & $0.00689$ \\
+Diameter & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] & \#\#\#\footnotemark[1] \\
+Density & $0.00001$ & $0.00065$ & $0.00034$ & $0.00066$ \\
+Avg. clustering coeff. & $0.05647$ & $0.51522$ & $0.30841$ & $0.51980$ \\
+\bottomrule
+\end{tabular}
+\footnotetext[1]{The input and influence graphs are not strongly connected, thus the diameter attribute is incomprehensible for these cases.}
+\end{table}
+\end{comment}
+
+\begin{comment}
+\begin{table}[ht]
+\caption{Final influence value comparison across models: cit-HepPh}
+\label{table_performance_comparison_cithep}
+\begin{tabular}{@{}l|ccc@{}}
+\toprule
+Settings & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Community values (best)\footnotemark[5] & $1776.47$ & $691.80$ & $247.16$ \\
+Narrow greedy (best)\footnotemark[5] & $4304.14$ & $1013.97$ & $657.99$ \\
+Full greedy & $4289.16$ & $1006.66$ & $720.45$ \\
+\midrule
+Improvement vs. Full greedy & $0.35\%$ & $-0.73\%$ & $-8.67\%$ \\
+Improvement vs. Community values & $142.29\%$ & $46.57\%$ & $166.22\%$ \\
+\bottomrule
+\end{tabular}
+\vspace{5mm}
+\caption{Final influence value comparison across models: soc-Epinions1}
+\label{table_performance_comparison_socepinions}
+\begin{tabular}{@{}l|ccc@{}}
+\toprule
+Settings & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Community values (best)\footnotemark[5] & $10343.85$ & $232.29$ & $839.56$ \\
+Narrow greedy (best)\footnotemark[5] & $10337.01$ & $3037.17$ & $838.89$ \\
+Full greedy & $10464.61$ & $3615.53$ & $1386.21$ \\
+\midrule
+Improvement vs. Full greedy & $-1.22\%$ & $-15.99\%$ & $-39.48\%$ \\
+Improvement vs. Community values & $-0.07\%$ & $1207.49\%$ & $-0.08\%$ \\
+\bottomrule
+\end{tabular}
+\vspace{5mm}
+\caption{Final influence value comparison across models: email-EuAll}
+\label{table_performance_comparison_emaileuall}
+\begin{tabular}{@{}l|ccc@{}}
+\toprule
+Settings & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Community values (best)\footnotemark[5] & $7021.69$ & $563.97$ & $949.39$ \\
+Narrow greedy (best)\footnotemark[5] & $7371.71$ & $2317.14$ & $1328.67$ \\
+Full greedy & $7410.67$ & $2290.82$ & $1620.68$ \\
+\midrule
+Improvement vs. Full greedy & $-0.53\%$ & $1.15\%$ & $-18.02\%$ \\
+Improvement vs. Community values & $4.98\%$ & $310.86\%$ & $39.95\%$ \\
+\bottomrule
+\end{tabular}
+\footnotetext[5]{Final influence values with the best community detection hyperparameters for different models and settings.}
+\end{table}
+\end{comment}
+
+\begin{comment}
+\begin{table}[ht]
+\caption{Runtime of different steps (in seconds): cit-HepPh}
+\label{table_runtimes_big_cithep}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Influence model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Influence graphs & $5966$ & $1654$ & $2181$ \\
+Community detection (best)\footnotemark[4] & $348$ & $484$ & $1343$ \\
+Narrow greedy (best)\footnotemark[4] & $4743$ & $1095$ & $665$ \\
+\midrule
+Sum & $\mathbf{11057}$ & $\mathbf{3233}$ & $\mathbf{4189}$ \\
+Full greedy & $35857$ & $5094$ & $4857$ \\
+\midrule
+Runtime improvement & $69.16\%$ & $36.53\%$ & $13.75\%$ \\
+\bottomrule
+\end{tabular}
+\vspace{5mm}
+\caption{Runtime of different steps (in seconds): soc-Epinions1}
+\label{table_runtimes_big_socepinions}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Influence model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Influence graphs & $10443$ & $2564$ & $5302$ \\
+Community detection (best)\footnotemark[4] & $9212$ & $2436$ & $4272$ \\
+Narrow greedy (best)\footnotemark[4] & $575$ & $8711$ & $169$ \\
+\midrule
+Sum & $\mathbf{20230}$ & $\mathbf{13711}$ & $\mathbf{9743}$ \\
+Full greedy & $294897$ & $48087$ & $26481$ \\
+\midrule
+Runtime improvement & $93.14\%$ & $71.49\%$ & $63.20\%$ \\
+\bottomrule
+\end{tabular}
+\vspace{5mm}
+\caption{Runtime of different steps (in seconds): email-EuAll}
+\label{table_runtimes_big_emaileuall}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Influence model & Independent Cascade & Linear Threshold & Only-Listen-Once \\
+\midrule
+Influence graphs & $10663$ & $5358$ & $10666$ \\
+Community detection (best)\footnotemark[4] & $6917$ & $3145$ & $3018$ \\
+Narrow greedy (best)\footnotemark[4] & $13598$ & $16982$ & $527$ \\
+\midrule
+Sum & $\mathbf{31178}$ & $\mathbf{25485}$ & $\mathbf{14211}$ \\
+Full greedy & $561009$ & $91434$ & $82637$ \\
+\midrule
+Runtime improvement & $94.44\%$ & $72.13\%$ & $82.80\%$ \\
+\bottomrule
+\end{tabular}
+\footnotetext[4]{Runtime of the community detection algorithm with the hyperparameters that provided the highest expected final influence results when narrowing the search space of the greedy method.}
+\end{table}
+\end{comment}
