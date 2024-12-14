@@ -465,7 +465,14 @@ One notable advanatage of the \textit{Narrow greedy} setting using our novel com
 \end{minipage}
 \end{figure}
 
-\colorbox{pink}{TODO: overlap comparison}
+Another interesting aspect of our testing is the degree of overlap between the best initially active node selections for the \textit{Full greedy} and \textit{Narrow greedy} settings. In Figure \ref{fig_overlap}, the bars labeled as \textit{Artificial (avg)} show the average amount of overlaps for the artificially generated benchmark graphs. For the Independent Cascade and Linear Threshold models, almost $40\%$ of the selected nodes are the same, which is a notable result considering the size of the input graphs. For the Only-Listen-Once model, only $17\%$ of the selected nodes are the same on average. These results are still worth mentioning, but not as outstanding as for the other models.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{plots/plot_overlap.png}
+\caption{Overlap of the best initially active node selections between the \textit{Full greedy} and \textit{Narrow greedy} settings}
+\label{fig_overlap}
+\end{figure}
 
 %%===============================%%
 %% Results on real-life networks %%
@@ -511,11 +518,9 @@ email-EuAll & ($cp=0.75$, $ta=15.5$) & ($cp=0.8$, $ta=45$) & ($cp=0.75$, $ta=24.
 \end{tabular}
 \end{table}
 
-Figures \ref{fig_performance_cithep}, \ref{fig_performance_socepinions} and \ref{fig_performance_emaileuall} compare the final influence values of our defined settings, each graph separately. For these bigger networks, the \textit{Community values} setting performs noticeably worse compared to the other two settings. This was not the case for the artificially generated small graphs, the results are closer to each other in Section \ref{subsec_res_artificial}. If we look at the \textit{Narrow greedy} setting, the results emphasize our intuition again, that is significant community roles should be taken into consideration when selecting initially active nodes in the influence maximization problem. Our finding to highlight is that the \textit{Narrow greedy} produces way better results in most cases compared to the \textit{Community values} setting, while also being close to the \textit{Full greedy} results.
+Figures \ref{fig_performance_cithep}, \ref{fig_performance_socepinions} and \ref{fig_performance_emaileuall} compare the final influence values of our defined settings, each graph separately. For these bigger networks, the \textit{Community values} setting performs noticeably worse compared to the other two settings. This was not the case for the artificially generated small graphs, the results are closer to each other in Section \ref{subsec_res_artificial}. If we look at the \textit{Narrow greedy} setting, the results emphasize our intuition again, that is significant community roles should be taken into consideration when selecting initially active nodes in the influence maximization problem. Our finding to highlight is that the \textit{Narrow greedy} produces way better results in most cases compared to the \textit{Community values} setting, while also being close to the \textit{Full greedy} results. In some cases, it delivers even better results than the \textit{Full greedy} in our evaluation. The explanation for this phenomenon is very simple: while the original greedy method guarantees at least $67\%$ approximation of the optimal solution, there is nothing that prevents other algorithms to produce better results. In these situations, it turns out that the original greedy method is not able to find the optimal solution, but our algorithm approximates it better.
 
-Fortunately, our runtime statistics are also promising. Figures \ref{fig_runtimes_cithep}, \ref{fig_runtimes_socepinions} and \ref{fig_runtimes_emaileuall} showcase that extensive amounts of runtimes can be saved with the \textit{Narrow greedy} setting compared to the \textit{Full greedy} setting. In our testing, we observe a positive correlation between the size and density of the network and the corresponding time savings.
-
-\begin{figure}[ht]
+\begin{figure}[p]
 \centering
 \begin{minipage}[b]{0.45\textwidth}
 \includegraphics[width=\textwidth]{plots/plot_performance_cithep.png}
@@ -556,18 +561,23 @@ Fortunately, our runtime statistics are also promising. Figures \ref{fig_runtime
 \end{minipage}
 \end{figure}
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\textwidth]{plots/plot_overlap.png}
-\caption{Overlap of \textit{Full greedy} and best \textit{Narrow greedy} selections}
-\label{fig_overlap}
-\end{figure}
+Fortunately, our runtime statistics are also promising. Figures \ref{fig_runtimes_cithep}, \ref{fig_runtimes_socepinions} and \ref{fig_runtimes_emaileuall} showcase that extensive amounts of runtimes can be saved with the \textit{Narrow greedy} setting compared to the \textit{Full greedy} setting. In our testing, we observe a positive correlation between the size and density of the network and the corresponding time savings. For some models and benchmark graphs, around $90\%$ of the runtime can be preserved with marginal, or even no performance loss at all.
+
+In this section, we also have to refer back to Figure \ref{fig_overlap} where we showcase the degree of overlap between the best initially active node selections for the \textit{Full greedy} and \textit{Narrow greedy} settings. For two of our three selected graphs, namely \textit{cit-HepPh} and \textit{email-EuAll}, quite high overlap percentages can be observed, ranging from $45\%-85\%$. These values are even higher than the ones for the smaller artificial networks. It means that in some cases, our community detection and search space narrowing solution combined almost selects the same nodes as the original greedy influence maximization method, but with considerably less runtime.
 
 %%============%%
 %% Discussion %%
 %%============%%
 
 \section{Discussion}\label{sec_discussion}
+
+\colorbox{pink}{TODO}
+
+%%=============%%
+%% Future work %%
+%%=============%%
+
+\section{Future work}\label{sec_future}
 
 1. how to find which hyperparameters should be tested: after finding the best ones, the solution becomes incredibly fast
 2. further influence models
@@ -583,27 +593,11 @@ Fortunately, our runtime statistics are also promising. Figures \ref{fig_runtime
 
 \colorbox{pink}{TODO}
 
-%%===========================%%
-%% Supplementary information %%
-%%===========================%%
-
-\subsection*{Supplementary information}\label{subsec_supplementary}
-
-\colorbox{pink}{TODO}
-
 %%==================%%
 %% Acknowledgements %%
 %%==================%%
 
 \subsection*{Acknowledgements}\label{subsec_acknowledgements}
-
-\colorbox{pink}{TODO}
-
-%%==========%%
-%% Appendix %%
-%%==========%%
-
-\section{Appendix}\label{sec_appendix}
 
 \colorbox{pink}{TODO}
 
