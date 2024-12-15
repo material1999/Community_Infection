@@ -571,7 +571,15 @@ In this section, we also have to refer back to Figure \ref{fig_overlap} where we
 
 \section{Discussion}\label{sec_discussion}
 
-\colorbox{pink}{TODO}
+The results presented in this study demonstrate the efficiency and versatility of our proposed generalized community detection algorithm and its application for the influence maximization problem. By giving the outputs of the influence simulations to our community detection process, we assign community values to each node in the selected benchmark networks. Then, we take the \textit{Narrow greedy} setting developed by Hajdu et al. that narrows the search space of the original greedy influence maximization algorithm. This approach significantly reduces computational costs, and has also proven effective across various network types, influence models, and benchmark datasets.
+
+Our study underscores the critical role of community structure in influence maximization. By leveraging community values derived from overlapping community detection, we prove that nodes with significant community roles are highly influential in spreading processes. The \textit{Narrow greedy} setting consistently produced influence values comparable to the original \textit{Full greedy} algorithm, achieving this with substantially less runtime. Moreover, the flexibility of our methodology, which generalizes across multiple influence models (Independent Cascade, Linear Threshold and Only-Listen-Once), highlights its adaptability to diverse scenarios.
+
+Compared to existing methods, our approach offers a unique advantage: it eliminates the dependency of specific influence models, allowing for a broader range of applications. While prior studies focused on predefined models or specific community detection techniques, our method provides a generalized framework capable of adapting to various network structures and dynamics. This adaptability was particularly evident in its consistent performance across both artificially generated and real-world networks.
+
+The practical implications of our findings are substantial. For real-world applications such as targeted advertising, epidemic containment, and information dissemination, identifying key influencers in networks is crucial. Our method provides an efficient and scalable solution, making it particularly suitable for large-scale networks where computational efficiency is a critical factor. For instance, the ability to reduce the runtime of influence maximization by up to $90\%$ while maintaining high performance levels, as demonstrated in the \textit{cit-HepPh}, \textit{soc-Epinions1} and \textit{email-EuAll} datasets, exemplifies its potential utility in handling massive, real-world datasets.
+
+Despite its strengths, our approach has certain limitations. First, the reliance on hyperparameter tuning for the variables $cp$ and $ta$ introduces an element of subjectivity and additional computational overhead during the fine-tuning process. While our results suggest that the chosen parameters produced adequate outcomes, further research is needed to automate or refine this tuning process for greater robustness. Second, the Only-Listen-Once influence model presented runtime challenges due to its lower average edge weights, highlighting a potential area for optimization. Lastly, our method’s reliance on simulated influence models may limit its direct applicability to networks where real-world influence dynamics deviate significantly from these models.
 
 %%=============%%
 %% Future work %%
@@ -579,7 +587,11 @@ In this section, we also have to refer back to Figure \ref{fig_overlap} where we
 
 \section{Future work}\label{sec_future}
 
-Building on the findings of this study, several directions present themselves for future exploration. One critical area involves hyperparameter fine-tuning. By identifying the most impactful parameters in our methodology, it is possible to significantly enhance the efficiency of our solution. The computations of our algorithms are substantially faster once optimal configurations are identified. Another promising avenue lies in the exploration of other influence models. Expanding the range of models studied can help capture even more diverse dynamics of influence propagation within networks, broadening the applicability of the proposed methodologies in real-world scenarios. Similarly, trying out further community detection algorithms offer an opportunity to address the challenges of overlapping and hierarchical structures in large-scale networks. By refining our proposed algorithms, it will be possible to develop more robust tools capable of tackling the complexities of modern systems. These future endeavors aim to extend the scalability, precision, and practicality of the approaches introduced in this research, paving the way for even greater contributions to the field.
+Building on the findings of this study, several directions present themselves for future exploration. One critical area involves hyperparameter fine-tuning. By identifying the most impactful parameters in our methodology, it is possible to significantly enhance the efficiency of our solution. The computations of our algorithms are substantially faster once optimal configurations are identified. Another promising avenue lies in the exploration of other influence models.
+
+Expanding the range of models studied can help capture even more diverse dynamics of influence propagation within networks, broadening the applicability of the proposed methodologies in real-world scenarios. Similarly, trying out further community detection algorithms offer an opportunity to address the challenges of overlapping and hierarchical structures in large-scale networks. By refining our proposed algorithms, it will be possible to develop more robust tools capable of tackling the complexities of modern systems. These future endeavors aim to extend the scalability, precision, and practicality of the approaches introduced in this research, paving the way for even greater contributions to the field.
+
+Developing automated approaches for hyperparameter optimization is another direction for improvement, reducing the reliance on manual fine-tuning. Investigating the impact of additional network features such as local or node attributes on community detection and influence maximization might provide better insights on how spreading processes unfold in real-life scenarios.
 
 %%============%%
 %% Conclusion %%
@@ -587,7 +599,15 @@ Building on the findings of this study, several directions present themselves fo
 
 \section{Conclusion}\label{sec_conclusion}
 
-\colorbox{pink}{TODO}
+In this study, we proposed a novel framework that uses influence simulations and community detection to identify influential nodes in directed and weighted networks. Then, we serve the output of this pipeline to the greedy influence maximization algorithm. Unlike traditional methods that rely on specific influence models, our approach generalizes across various influence models (Independent Cascade, Linear Threshold and Only-Listen-Once models) and effectively narrows the search space for influence maximization using community roles.
+
+Through rigorous experimentation on both artificially generated and real-life networks, we demonstrated that our \textit{Narrow greedy} setting achieves results comparable to the traditional \textit{Full greedy} setting while significantly reducing computational overhead. This efficiency gain is particularly critical for large-scale networks, as seen in the \textit{cit-HepPh}, \textit{soc-Epinions1} and \textit{email-EuAll} datasets. In some cases, runtime was reduced by up to $90\%$ with minimal performance trade-offs. These findings highlight the potential of community-based heuristics to enhance scalability and practicality in solving influence maximization problems.
+
+Additionally, our results underscore the importance of overlapping community structures in understanding influence dynamics. Nodes with higher community values - those embedded in multiple communities - were consistently identified as influential, reinforcing the role of community detection in influence propagation studies.
+
+While our method offers substantial improvements, it is not without limitations. The dependency on hyperparameter tuning and the computational challenges associated with certain influence models, especially the Only-Listen-Once model, suggest avenues for refinement. Future research could explore automated tuning mechanisms, extend the framework to incorporate dynamic and hybrid influence models, and experiment with alternative community detection algorithms to further enhance performance.
+
+In conclusion, this study presents a versatile and efficient methodology that bridges community detection and influence maximization, offering significant contributions to network science and its practical applications. By addressing the challenges of scalability and generalizability, our approach lays the groundwork for further advancements in the field, enabling broader adoption in real-world scenarios.
 
 %%==================%%
 %% Acknowledgements %%
