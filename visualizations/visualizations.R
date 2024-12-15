@@ -833,7 +833,7 @@ combined_plot <- plot9 + plot10 + plot11 +
   plot_layout(ncol = 3) +
   plot_annotation(tag_levels = 'A')
 
-ggsave("visualizations/combined_plot_3x3.png", combined_plot, width = 21, height = 12)
+ggsave("visualizations/combined_plot_3x3.png", combined_plot, width = 16, height = 12)
 
 ############################## COMPARISON OF INFLUENCE VALUES ##############################
 
