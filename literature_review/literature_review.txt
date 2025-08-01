@@ -1,0 +1,146 @@
+###############################################################################################
+############################# Surveys on models and methods ###################################
+###############################################################################################
+
+New trends in influence maximization models (2021)
+- survey on influence models and methods
+- lot of models are developed
+- lot of methods are developed
+- most of the models are only tested for IC and LT (Table 2)
+
+Influence maximization frameworks, performance, challenges and directions on social network - A theoretical study (2022)
+- long survey
+- lot of models
+- lot of methods
+- open problems
+
+Influence maximization in social networks - a survey of behaviour-aware methods (2023)
+- SNAM article
+- additional information (such as behaviours, opinions, targets) is available
+
+A survey on influence maximization models (2024)
+- influence maximization is still an emerging field
+- lot of different methods are proposed
+- static vs dynamic networks
+- whole vs reduced network-based
+
+###############################################################################################
+############# There are other researchers who think communities are important #################
+###############################################################################################
+
+A Community-Aware Framework for Social Influence Maximization (2023)
+- IC, LT
+- do community detection
+- solve the IM for the communities
+- select final seed set by solving an ILP problem
+- new diagram type we should also consider: X axis --> budget k, Y axis --> influence
+
+FIP - A fast overlapping community-based influence maximization algorithm using probability coefficient of global diffusion in social networks (2023)
+- Q1 journal
+- very good literature review
+- compares to other community-based solutions
+- can get some more ideas from the article
+
+Fair Influence Maximization in Social Networks - A Community-Based Evolutionary Algorithm (2024)
+- community detection is the base
+- spread influence evenly across communities
+
+Influence maximization algorithm based on group trust and local topology structure (2024)
+- conecpts of intra-group connectivity, inter-group diffusion and group trust are defined
+- both group trust and local topology is taken into consideration
+- here group ~ community
+
+Overlapping community-based fair influence maximization in social networks under open-source development model algorithm (2025)
+- IC
+- fair IM --> equitable distribution of influence across communities
+- novel overlapping community detection and existing optimization methods
+
+###############################################################################################
+################## ML-based and other new types of approaches are emerging ####################
+###############################################################################################
+
+An MCDM integrated adaptive simulated annealing approach for influence maximization in social networks (2021)
+- IC
+- centrality measures to create seed pool
+- self-adaptive meta-heuristic approach --> adaptive simulated annealing
+
+Influence maximization in social networks using graph embedding and graph neural network (2022)
+- SIR, IC
+- struc2vec node embedding
+- then processed by GNN
+- then passed to a regressor to predict the final influence values
+
+A Survey on Influence Maximization - From an ML-Based Combinatorial Optimization (2023)
+- ML is emerging
+- most of the models only tested on IC and LT
+
+Deep Graph Representation Learning and Optimization for Influence Maximization (2023)
+- IC
+- learning-based method
+
+Balanced influence maximization in social networks based on deep reinforcement learning (2024)
+- balanced influence
+- ML-based approach
+- uses networks where more metadata is available
+
+Fuzzy Influence Maximization in Social Networks (2024)
+- model a social network as a fuzzy graph
+- a fuzzy variable is used to represent the extent to which a user is influenced by a message
+- find influential users on this fuzzy graph
+
+Identifying effective nodes in term of the influence maximization on the social IoT networks using deep learning‑based node embedding (2025)
+- node embedding and deep learning with LSTM
+- more complex networks with available metadata
+
+Finding influential nodes via graph embedding and hybrid centrality in complex networks (2025)
+- uses graph embeddings and DeepWalk
+
+Overlapping community-based fair influence maximization in social networks under open-source development model algorithm (2025)
+- IC
+- fair IM --> equitable distribution of influence across communities
+- novel overlapping community detection and existing optimization methods
+
+###############################################################################################
+################## Variations of influence maximization - dynamic networks ####################
+###############################################################################################
+
+Influence Spreading Path and Its Application to the Time Constrained Social Influence Maximization Problem and Beyond (2013)
+- IC
+- time constrained IM
+- Latency Aware Independent Cascade (LAIC) model
+
+An improved influence maximization method for social networks based on genetic algorithm (2022)
+- IC
+- considers dynamic networks, not static ones
+
+###############################################################################################
+########### Variations of influence maximization - balanced spread across the graph ###########
+###############################################################################################
+
+Community-diversified influence maximization in social networks (2020)
+- community-diversified influence maximization
+- proposes a metric to measure the community-diversified influence
+
+Balanced influence maximization in social networks based on deep reinforcement learning (2024)
+- balanced influence
+- ML-based approach
+- uses networks where more metadata is available
+
+Fair Influence Maximization in Social Networks - A Community-Based Evolutionary Algorithm (2024)
+- community detection is the base
+- spread influence evenly across communities
+
+Overlapping community-based fair influence maximization in social networks under open-source development model algorithm (2025)
+- IC
+- fair IM --> equitable distribution of influence across communities
+- novel overlapping community detection and existing optimization methods
+
+###############################################################################################
+############################### Greedy can be further optimized ###############################
+###############################################################################################
+
+Cost-effective Outbreak Detection in Networks (2007)
+- improves upon the empirical run-time of the simple greedy algorithm by further exploiting the property of submodularity
+
+CELF_plusplus - Optimizing the Greedy Algorithm for Influence Maximization in Social Networks (2011)
+- further improved upon the empirical run-time of the CELF algorithm by even further exploiting the property of submodularity to avoiding unnecessary re-computations of marginal gains incurred by CELF
