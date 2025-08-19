@@ -2,13 +2,13 @@
 ############################# Surveys on models and methods ###################################
 ###############################################################################################
 
-New trends in influence maximization models (2021)
+✅ New trends in influence maximization models (2021)
 - survey on influence models and methods
 - lot of models are developed
 - lot of methods are developed
 - most of the models are only tested for IC and LT (Table 2)
 
-Influence maximization frameworks, performance, challenges and directions on social network - A theoretical study (2022)
+✅ Influence maximization frameworks, performance, challenges and directions on social network - A theoretical study (2022)
 - long survey
 - lot of models
 - lot of methods
@@ -18,7 +18,7 @@ Influence maximization in social networks - a survey of behaviour-aware methods 
 - SNAM article
 - additional information (such as behaviours, opinions, targets) is available
 
-A survey on influence maximization models (2024)
+✅ A survey on influence maximization models (2024)
 - influence maximization is still an emerging field
 - lot of different methods are proposed
 - static vs dynamic networks
@@ -139,8 +139,8 @@ Overlapping community-based fair influence maximization in social networks under
 ############################### Greedy can be further optimized ###############################
 ###############################################################################################
 
-Cost-effective Outbreak Detection in Networks (2007)
+✅ Cost-effective Outbreak Detection in Networks (2007)
 - improves upon the empirical run-time of the simple greedy algorithm by further exploiting the property of submodularity
 
-CELF_plusplus - Optimizing the Greedy Algorithm for Influence Maximization in Social Networks (2011)
+✅ CELF_plusplus - Optimizing the Greedy Algorithm for Influence Maximization in Social Networks (2011)
 - further improved upon the empirical run-time of the CELF algorithm by even further exploiting the property of submodularity to avoiding unnecessary re-computations of marginal gains incurred by CELF
