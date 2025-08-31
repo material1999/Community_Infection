@@ -15,7 +15,6 @@
 \usepackage{algpseudocode}
 \usepackage{listings}
 \usepackage{comment}
-
 \usepackage{lmodern}
 \usepackage{anyfontsize}
 \usepackage{comment}
@@ -33,16 +32,7 @@
 
 \begin{document}
 
-%%=======%%
-%% Title %%
-%%=======%%
-
-%\title[Article Title]{Article Title}
-\title[Article Title]{Bridging Community Detection and Influence Maximization: A Generalized Approach}
-
-%%=========%%
-%% Authors %%
-%%=========%%
+\title[Bridging Community Detection and Influence Maximization: A Generalized Approach]{Bridging Community Detection and Influence Maximization: A Generalized Approach}
 
 \author[1]{\fnm{Máté} \sur{Vass}}
 \email{vassmate@inf.u-szeged.hu}
@@ -53,7 +43,7 @@
 \author[2,3]{\fnm{László} \sur{Hajdu}}
 \email{laszlo.hajdu@innorenew.eu}
 
-\author*[6]{\fnm{András} \sur{Bóta}}
+\author*[5]{\fnm{András} \sur{Bóta}}
 \email{andras.bota@ltu.se}
 
 \affil[1]{\orgdiv{Department of Computer Algorithms and Artificial Intelligence}, \orgname{University of Szeged}, \orgaddress{\street{Árpád tér 2}, \city{Szeged}, \postcode{HU-6720}, \country{Hungary}}}
@@ -64,20 +54,11 @@
 
 \affil[4]{\orgdiv{Department of Applied Informatics}, \orgname{University of Szeged}, \orgaddress{\street{Boldogasszony sgt. 6}, \city{Szeged}, \postcode{H-6725}, \country{Hungary}}}
 
-
 \affil[5]{\orgdiv{Department of Computer Science, Electrical and Space Engineering, Embedded Intelligent Systems Lab}, \orgname{Luleå University of Technology}, \orgaddress{\city{Luleå}, \postcode{SE-97187}, \country{Sweden}}}
-
-%%==========%%
-%% Abstract %%
-%%==========%%
 
 \abstract{
 In recent years, many papers have focused on community detection and influence spread in social networks. The influence maximization problem involves determining a set of nodes from which the maximum expected value of influenced nodes is generated through a given influence process. Our intuition was that in social networks, entities with important community roles are crucial for solving this problem. However, most of the existing approaches focus on specific models and their unique attributes. Our goal was to design an algorithm that is generalized in a way that it is independent of the specifics of these models. We have developed a general community detection method that can use any influence model as its input, and based on the found communities, it can narrow down the search space of the influence maximization problem. We only select nodes from the best candidates sorted by their community roles and try to maximize the expected final influence value. With our proof of concept approach, we show the efficiency of our algorithm on artificial and real-life benchmark graphs for the popular Independent Cascade, Linear Threshold and Only-Listen-Once influence models.
 }
-
-%%==========%%
-%% Keywords %%
-%%==========%%
 
 \keywords{
 network science, graph mining, influence modelling, community detection, influence maximization
@@ -85,135 +66,61 @@ network science, graph mining, influence modelling, community detection, influen
 
 \maketitle
 
-\newpage
-
-%%==============%%
-%% Introduction %%
-%%==============%%
-
 \section{Introduction}\label{sec_introduction}
 
 Networks are powerful modelling tools due to their ability to provide visual and mathematical representations of complex systems. They are often used in applications to represent interactions and relationships between people \citep{social}, financial and technological connections between companies \citep{fraud, fraud2}, relationships between words in our language \citep{words, words2} and in many other ways \citep{newmanreview}. Due to the ever-increasing number of internet users and the rise of social media, social network analysis has become an important topic in data science. In this context, networks can help identify closely knit communities, influential nodes or the spread of diseases and information.
 
-In network science by communities we mean groups of nodes which are more densely connected to each other than to the rest of the network. Many real-life networks, including social networks, show community structure, meaning their edge distribution is both globally and locally inhomogeneous. A large variety of detection algorithms have been proposed to identify communities, and these can be categorized into different families \citep{fortunatoreview}. One fundamental difference between existing methods is whether or not they allow overlaps to exist between communities.
+In network science, \textit{communities} mean groups of nodes which are more densely connected to each other than to the rest of the network. Many real-life networks, including social networks, show community structure, meaning their edge distribution is both globally and locally inhomogeneous. A large variety of detection algorithms have been proposed to identify communities, and these can be categorized into different families \citep{fortunatoreview}. One fundamental difference between existing methods is whether or not they allow overlaps to exist between communities.
 
-Modelling the spread of information (diffusion) and influence maximization are two closely related fields in science. The most commonly used network-based information spreading models come from (1) the field of epidemic spreading, e.g., the SEIR compartmental models \citep{seir1927, seir2001}, and their derivative, the Independent Cascade Model \citep{domingos, kempe}, or (2) from the field of sociology, namely the Linear Threshold Model \citep{granovetter, kempe} and its extensions. Various other network-based alternative methods have been proposed such as the Only-Listen-Once model \citep{kempe}. Since the computation of transmission probabilities is NP-hard for most of the popular models \citep{kempe, economic}, approximation methods are often used to calculate these values \citep{lisurvey}. It is also shown \citep{wasserman, kempe} that an adequate number of simulations is enough to quickly converge to accurate solutions.
+Modelling the spread of information (diffusion) and influence maximization are two closely related fields in science. The most commonly used network-based information spreading models come from (1) the field of epidemic spreading, e.g., the SEIR compartmental models \citep{seir1927, seir2001}, and their derivative, the Independent Cascade Model \citep{domingos, kempe}, or (2) from the field of sociology, namely the Linear Threshold Model \citep{granovetter, kempe} and its extensions. Various other network-based alternative methods have been proposed such as the Only-Listen-Once and Decreasing Cascade models \citep{kempe}. Since the computation of transmission probabilities is NP-hard for most of the popular models \citep{kempe, economic}, approximation methods are often used to calculate these values \citep{lisurvey}. It is also shown that an adequate number of simulations is enough to quickly converge to accurate solutions \citep{wasserman, kempe}.
 
 The influence maximization problem aims to find the set of $K$ initially influenced (or active) nodes influencing (or activating) the largest fraction of nodes in the network, where $K$ is a parameter of the problem \citep{kempe}. In the same paper where the problem was introduced, the authors also proposed a greedy heuristic algorithm to approximate its optimal solution. In the upcoming years, this heuristic was further improved by exploiting the property of submodularity \citep{leskovec_2007_cost, goyal_2011_celf} and still serves as a universal benchmark today. As the field attracted widespread interest, many algorithms have been proposed to solve the problem \citep{lisurvey, azaouzi_2021_new, singh_2022_influence, jaouadi_2024_survey}. However, most of these methodologies focus on the two most popular information spreading models, namely the Independent Cascade and Linear Threshold models.
 
-Recent studies have shown that influence maximization and community detection can be used in combination to achieve better performance on both artificially generated and real-world graphs \citep{csermely, evaluating, rajeh}. In their work, \citet{csermely} showed that one possible way to combine these two methods is to use the results of a simulated influence process, usually by the Independent Cascade model, as the input for the community detection algorithm. The node modules (communities) can be identified by locating hills in the community landscape. One limitation of this approach is that while the Independent Cascade model is the most popular influence model in network science, it does not incorporate threshold characteristics and its single-chance-of-influence behaviour is not realistic in many real-life situations. In a recent study, \citet{rajeh} proposed a novel node ranking strategy exploiting the ubiquity of the community structure in real-world networks by selecting distant spreaders.
-
-\citet{evaluating} defined so-called community values to rank influential nodes in networks. First, they applied overlapping community detection on the entire graph and then they counted how many communities a single node belongs to. The vertices could be ranked based on these values: the ones that were part of many communities had higher values assigned to them, thus having more influence on the network. They proposed that using these community values, the search space of the greedy influence maximization method can be efficiently narrowed. The idea was tested with numerous community detection algorithms on the Independent Cascade model.
-
 The existing literature lacks a comprehensive overview of the general applicability of influence maximization methods to different diffusion models other than the well-known Independent Cascade and Linear Threshold models. The main contribution of this paper is our proposed framework that is capable of effectively approximating the influence maximization problem for any diffusion model. We achieve this goal by creating an influence graph as the first step of our pipeline. The algorithm repeatedly simulates influence processes on the original input graph, and measures how much each individual edge contributes to the spreading process. From this point onwards, the algorithm is general in a way that the influence model is not used in any upcoming step. We argue that the characteristics of both the diffusion model and the input network can be encapsulated in the emerging influence graph.
 
-After the influence graph is constructed, a community detection method is applied to generate communities in an agglomerative fashion using a local expansion rule. This general community detection algorithm is our secondary contribution, which is capable of using the output of any influence spreading algorithm to create communities. We demonstrate the generality of this approach using a variety of influence spreading models: (1) Independent Cascade, (2) Linear Threshold and (3) Only-Listen-Once models.
+After the influence graph is constructed, a community detection method is applied to generate communities in an agglomerative fashion using a local expansion rule. This general community detection algorithm is our secondary contribution, which is capable of using the output of any influence spreading algorithm to create communities. We demonstrate the generality of this approach using a variety of influence spreading models: (1) Independent Cascade, (2) Linear Threshold, (3) Only-Listen-Once and (4) Decreasing Cascade models.
 
 As our third contribution, following the approach of Hajdu et al., we use the output of our newly proposed community detection algorithm to improve the performance of the greedy influence maximization algorithm of Kempe et al. We show that regardless of the influence model, choosing the most influential nodes based on their community value is efficient for the influence maximization problem. We test the performance of our approach on a variety of artificially generated and real-life benchmark networks. We have to highlight that it is not possible to directly compare our results to \citet{evaluating} since they used undirected networks in their study compared to our directed ones.
 
-The remainder of the paper is structured as follows. In Section \ref{sec_background} we introduce the main concepts of our research and the three influence models. Section \ref{sec_methodology} is the main contribution of the article where our methodology is presented in detail. We showcase our approach to identify communities according to three different influence models and then use the results to enhance the performance of the previously described greedy influence maximization algorithm. Furthermore, in Section \ref{sec_setup} we define our particular experimental setup and provide the datasets used for evaluation. Our results are demonstrated in Section \ref{sec_results} where we test our methodology on different artificially generated and real-life networks as well. Finally, we wrap up our study with Section \ref{sec_conclusions}, concluding our study with summing up our contributions, limitations and avenues for future research.
+The remainder of the paper is structured as follows. In Section \ref{sec_literature} we introduce the main concepts of our research and provide an overview of existing solutions to the influence maximization problem. Section \ref{sec_methodology} is the main contribution of the article where our methodology is presented in detail. We showcase our approach to identify communities according to four different influence models and then use the results to enhance the performance of the previously described greedy influence maximization algorithm. Furthermore, in Section \ref{sec_setup} we define our particular experimental setup and provide the datasets used for evaluation. Our results are demonstrated in Section \ref{sec_results} where we test our methodology on different artificially generated and real-life networks as well. Finally, we wrap up our study with Section \ref{sec_conclusions}, concluding our study with summing up our contributions, limitations and avenues for future research.
 
-%%============%%
-%% Background %%
-%%============%%
+\section{Literature review}\label{sec_literature}
 
-\section{Background}\label{sec_background}
-
-Before describing our newly proposed community detection algorithm, in this section, we provide a short overview on the existing models and algorithms we use during our work. Namely, the three influence models (Independent Cascade, Linear Threshold and Only-Listen-Once models), and the greedy influence maximization algorithm.
-
-
-%%==================%%
-%% Influence models %%
-%%==================%%
+Before describing our proposed framework, we provide a short overview on already existing models and algorithms considered in our work. We introduce four influence models and the influence maximization problem, together with the greedy algorithm for its approximation.
 
 \subsection{Influence models}\label{subsec_infmodels}
 
-Graph-based influence models (also known as diffusion models) can be used to model a large variety of real-life phenomena. In this paper, we focus on the spreading opinion and influence on graphs.
+Graph-based influence models (also known as diffusion models) can be used to model a large variety of real-life phenomena. Let $G(V,E)$ denote graph $G$, with $V(G)$ as the set of nodes and $E(G)$ as the set of edges connecting them. The influence models used in this paper require an influence transmission value $0 < w_{u,v} \leq 1$ to be assigned to each edge of the graph. Furthermore, all models assign states to the nodes of the network: they can be {\em active} or {\em inactive}. These models also require a set of initially influenced nodes $A_0$ to be selected before the spreading process begins. How other nodes become active varies depending on the influence model. One similarity among the chosen models is that they are {\em progressive} i.e. active nodes keep their state until the end of the process, meaning they can't become inactive again. The spreading process takes place in discrete time steps or iterations, and each iteration can be characterized with the number of active nodes. Progressive models are clearly finite, the influence spreading process stops after a finite number of iterations.
 
-Let $G(V,E)$ denote graph $G$, with $V(G)$ as the set of nodes and $E(G)$ as the set of edges connecting them. The influence models used in this paper require an influence transmission value $0 < w_{u,v} \leq 1$ to be assigned to each edge of the graph. Furthermore, all models assign states to the nodes of the network: they can be {\em active} or {\em inactive}. These models also require a set of initially influenced nodes $A_0$ to be selected before the spreading process begins. How other nodes become active varies depending on the influence model. One similarity among the chosen models is that they are {\em progressive} i.e. active nodes keep their state until the end of the process, meaning they can't become inactive again. The spreading process takes place in discrete time steps or iterations, and each iteration can be characterized with the number of active nodes. Progressive models are clearly finite, the influence spreading process stops after a finite number of iterations.
-Our developed methodology considers the so-called {\em Generalized Threshold Model} as a framework: the decision of a node $v$ decision to become active can be based on an arbitrary monotone function of the set of neighbours of $v$ that are already active \citep{kempe}. The three models chosen for demonstrating the effectiveness of our methodology fit into this framework with an appropriate formulation \citep{kempe}.
+Our developed methodology considers the so-called {\em Generalized Threshold Model} as a framework: the decision of node $v$ becoming active is based on an arbitrary monotone function of the set of neighbours of $v$ that are already active \citep{kempe}. For demonstrating the effectiveness of our methodology, we chose four different models that are widely used to model diffusion processes and fit into this framework with an appropriate formulation \citep{kempe}. These are the Independent Cascade \citep{kempe}, Linear Threshold \citep{granovetter, kempe}, Only-Listen-Once \citep{kempe} and Decreasing Cascade \citep{kempe} models. Further details of each model are provided in Appendix \ref{appendix_models}.
 
-%%===========================%%
-%% Independent Cascade model %%
-%%===========================%%
-
-\subsubsection{Independent Cascade model}
-
-In the Independent Cascade (IC) model \citep{kempe} nodes try to activate their inactive neighbors according the the influence transmission values between them starting from the set of initially active nodes $A_0$. However, in any iteration $i$, only the newly activated nodes, activated in iteration $i-1$, are able to activate their inactive neighbors. This effectively creates another state for the nodes: activated, newly activated and inactive. These newly activated nodes have one chance to activate each of their inactive neighbors according to the $w_{u,v}$ influence probability assigned to the edge connecting them. If the attempt is successful, the target node will become active in iteration $i$. If a node has multiple newly activated neighbors, the activation attempts are made in an arbitrary order independently of each other.
-
-%%========================%%
-%% Linear Threshold model %%
-%%========================%%
-
-\subsubsection{Linear Threshold model}
-
-The Linear Threshold model, initially proposed by \citet{granovetter} was later reformulated for graphs in \citet{kempe}. The model has additional requirements for the influence transmission values (weights): for each node $v$, $\sum_{w \in N^+_v} w_{u,v} \leq 1$: the weights on the in-edges of a node may sum up to 1 at maximum. This model also assigns thresholds to each node at the beginning of the process either randomly or with a user specified strategy. These thresholds are denoted as $\theta_v$ for all $v \in V(G)$. The model starts from the set of initially active nodes $A_0$ at iteration $0$. At iteration $i$ all nodes remain active that were active in the previous iteration, and any node $v$ becomes active if the total weight of its active neighbors exceed $\theta_v$: $\sum_{w \in N^+_v} w_{u,v} \geq \theta_v$.
-
-%%========================%%
-%% Only-Listen-Once model %%
-%%========================%%
-
-\subsubsection{Only-Listen-Once model}
-
-The Only-Listen-Once model was also introduced in \citet{kempe} and - like in the Linear Threshold model - each node $n$ has a weight $0 < p_{n} \leq 1$ assigned to them. In this model, the first active neighboring node of $n$ tries to activate it with probability $p_{n}$ and any further attempt will inevitably fail. This means that $n$ only "listens" to the first neighbor that tries to activate it. The whole activation process unfolds the same way as in the Independent Cascade or Linear Threshold model in finite, discrete time steps.
-
-%%========================%%
-%% Influence maximization %%
-%%========================%%
+Computing the transmission probabilities is an NP-hard problem for the influence models used in our study \citep{kempe}. For example, for any initially influenced node set, computing the influence functions is \#P-complete for the Independent Cascade model \citep{chen}. This is the reason why many heuristics and approximation methods emerged in the past decades to tackle this problem \citep{lisurvey}. Others have also shown that it is possible to quickly converge to accurate solutions with an adequate number of simulations \citep{wasserman, kempe}. When simulating influence spread in our proposed framework, we also consider these crucial findings.
 
 \subsection{Influence maximization}\label{subsec_infmax}
 
 The influence maximization problem proposed by \citet{kempe} was inspired by the work of Domingos and Richardson on virus marketing \citep{domingos}. The goal of their study was to identify a few key individuals that have the greatest influence on the network of buyers. The proposed methodology can easily be applied in other settings, such as the spreading of influence or opinion on networks.
 
-For a set of initially active nodes $A_0$, let the expected number of active nodes at the end of a spreading process be $\sigma(A_0)$, and let the cardinality of $A_0$ be $K$. The objective of the influence maximization problem is to maximize the expected number of activated nodes $\sigma(A_0)$ when choosing the set of $K$ initially active nodes $A_0$. In the same paper where they introduced the problem, \citet{kempe} proved that greedy maximization guarantees an $1-1/e$ approximation for a wide subclass of the General Threshold Model (Submodular Threshold Model), which is the best possible theoretical bound (assuming that $P\neq NP$). Since then, a great variety of algorithms have been designed to solve the influence maximization problem \citep{lisurvey}, but the greedy algorithm remains a fundamental benchmark.
+For a set of initially active nodes $A_0$, let the expected number of active nodes at the end of a spreading process be $\sigma(A_0)$, and let the cardinality of $A_0$ be $K$. The objective of the influence maximization problem is to maximize the expected number of activated nodes $\sigma(A_0)$ when choosing the set of $K$ initially active nodes $A_0$. In the same paper where they introduced the problem, \citet{kempe} proved that the greedy maximization guarantees an $1-1/e$ approximation for a wide subclass of the General Threshold Model (Submodular Threshold Model), which is the best possible theoretical bound (assuming that $P\neq NP$). Since then, a great variety of algorithms have been designed to solve the influence maximization problem \citep{lisurvey}, but the greedy algorithm remains a fundamental benchmark. The formal description of the greedy method can be found in Appendix \ref{appendix_greedy}.
 
+\subsection{Community-based methods}\label{subsec_comm_based}
 
-%%==================%%
-%% Greedy algorithm %%
-%%==================%%
+As the field of network science got wider interest, many studies have shown that influence maximization and community detection can be used in combination to achieve better performance on both artificially generated and real-world networks \citep{csermely, cim, evaluating, rajeh}.
 
-\subsubsection{Greedy algorithm of Kempe et al.}\label{subsec_greedy}
+In their work, \citet{csermely} showed that one possible way to combine these two methods is to use the results of a simulated influence process, usually by the Independent Cascade model, as the input for the community detection algorithm. The node modules (communities) can be identified by locating hills in the community landscape. One limitation of this approach is that while the Independent Cascade model is the most popular influence model in network science, it does not incorporate threshold characteristics and its single-chance-of-influence behaviour is not realistic in many real-life situations.
 
-The greedy influence maximization heuristic of \citet{kempe} starts with an empty initial set $A_0$ and iteratively adds nodes to it until $|A_0| = K$, in each step maximizing $\sigma(A_0)$ with greedy decisions. Algorithm \ref{algo_greedy} shows the pseudocode of the greedy method.
+In a later study, \citet{cim} have established that nodes which belong to multiple communities may play a significant role in spreading influence on networks. \citet{evaluating} defined so-called community values to rank influential nodes in networks. First, they applied overlapping community detection on the entire graph and then they counted how many communities a single node belongs to. The vertices could be ranked based on these values: the ones that were part of many communities had higher values assigned to them, thus having more influence on the network. They proposed that using these community values, the search space of the greedy influence maximization method can be efficiently narrowed. The idea was tested with numerous community detection algorithms on the Independent Cascade model. In a recent study, \citet{rajeh} proposed a novel node ranking strategy exploiting the ubiquity of the community structure in real-world networks by selecting distant spreaders.
 
-\begin{algorithm}[ht]
-\caption{Greedy method}
-\label{algo_greedy}
-\textbf{Input:} $G(V,E)$ benchmark graph, $K$: desired size of $A_0$
-\\
-\textbf{Output:} $A_{0}$ initially influenced set
-\begin{algorithmic}[1]
-    \State $A_0 \leftarrow \emptyset$
-    \State \textbf{While} $|A_{0}| \leq K$
-    \State \hspace{\algorithmicindent} $A_{0}=A_{0} \cup \ arg \ max_{v \in (V(G) \setminus A_{0})} \sigma(A_{0} \cup \{v\})$
-\end{algorithmic}
-\end{algorithm}
-
-The algorithm starts with $A_0 = \emptyset$. In each iteration $i$, a node $v_i$ is selected from $V$, so that $\sigma(A_{i-1} \cup {v_i})$ is maximal. This process stops when the size of $A_i$ reaches $K$. The proposed method can be computationally expensive for two main reasons. Computing $\sigma$ itself can be time consuming especially for large graphs. Furthermore, in each iteration, the greedy algorithm has to evaluate $\sigma$ for $|V(G)| \setminus A_i$, which again, for large graphs, can be time consuming. We refer to two heuristics to solve these issues in the next section.
-
-\subsubsection{Influence approximation with simulation}\label{subsec_greedy_approx}
-
-Computing the transmission probabilities is an NP-hard problem for the influence models used in our study \citep{kempe}. For example, for any initially influenced node set, computing the influence functions is \#P-complete for the Independent Cascade model \citep{chen}. This is the reason why many heuristics and approximation methods emerged in the past decades to tackle this problem \citep{lisurvey}. Others have also shown that it is possible to quickly converge to accurate solutions with an adequate number of simulations \citep{wasserman, kempe}. While simulating influence spread, we also reach back to these heuristics: First, at the generation of influence graphs (Algorithm \ref{algo_inf_sim}), then during the calculation of the final influence values for a given initially influenced node set (Algorithms \ref{algo_greedy} and \ref{algo_greedy_narrow}).
-
-%%=============%%
-%% Methodology %%
-%%=============%%
+\colorbox{pink}{TODO}
 
 \section{Methodology}\label{sec_methodology}
 
 In this section, we are going to describe the core concepts of our algorithm that aims to provide a general approach for the influence maximization problem. First, we begin by introducing our influence simulation method that creates networks which we call influence graphs. These networks will serve as the input for our novel community detection algorithm. This method is general in a way that it works on any directed and weighted network, and the influence models only play a role in generating the input graphs themselves. Finally, we introduce community values and showcase our methodology that narrows down the search space of the previously mentioned greedy influence maximization algorithm.
 
-%%======================%%
-%% Influence simulation %%
-%%======================%%
-
 \subsection{Influence simulation}\label{subsec_infsim}
 
-As the first step of our method, an influence model has to be chosen. This can be any model that fulfils the following criteria: (1) it describes the spread of influence in discrete steps on a certain network, (2) the number of steps is finite and (3) an equivalent instance of the so-called triggering model (a well-known subclass of Submodular Threshold Models) exists \citep{kempe} for the chosen model.
-As a result of the simulation we obtain the {\em influence graph} in which the weight of an edge directed from node $v$ to $w$ is the approximate probability of $w$ being activated by the influence process starting from $v$. We note that the methodology is not restricted to the triggering model; its choice is technical concerning the unified implementation framework.
-To showcase the abilities of our algorithm, we decided to consider three popular models, namely the Independent Cascade \citep{domingos, kempe}, Linear Threshold \citep{granovetter, kempe} and Only-Listen-Once models \citep{kempe} described in detail in Section \ref{subsec_infmodels}.
+As the first step of our method, an influence model has to be chosen. This can be any model that fulfils the following criteria: (1) it describes the spread of influence in discrete steps on a certain network, (2) the number of steps is finite. As a result of the simulation we obtain the {\em influence graph} in which the weight of an edge directed from node $v$ to $w$ is the approximate probability of $w$ being activated by the influence process starting from $v$. We note that the methodology is not restricted to the triggering model; its choice is technical concerning the unified implementation framework.
 
-After implementing the above mentioned models, we run influence simulations on the input benchmark graphs. Algorithm \ref{algo_inf_sim} shows the pseudocode of our approach.
+To showcase the abilities of our algorithm, we decided to consider four popular models, namely the Independent Cascade, Linear Threshold, Only-Listen-Once and Decreasing Cascade models described in detail in Appendix \ref{appendix_models}. After implementing the above mentioned models, we run influence simulations on the input benchmark graphs. Algorithm \ref{algo_inf_sim} shows the pseudocode of our approach.
 
 \begin{algorithm}[ht]
 \caption{Influence simulation}
@@ -251,10 +158,6 @@ Our influence simulation algorithm takes a benchmark graph $G$ and an influence 
 The second part of the iteration is finding each directed path in the graph instance that is at most $d_{max}$ long. We store each path in $D$ with its endpoint node pairs as keys and we count how many instances contain them. As we are going through the iterations, if there is a directed $(v_1,v_2)$ path in the instance and $|(v_1,v_2)| \leq d_{max}$ is fulfilled, we modify the dictionary. If $(v_1,v_2) \in D_{keys}$ already then we increase the value associated with the key by $1$ in $increment(D,(v_1,v_2))$, otherwise we add this new key $(v_1,v_2)$ to $D$ with value $1$ in $add(D,(v_1,v_2),1)$. $D$ can be interpreted as a structure where the keys are directed edges and the values are the edge weights. In this representation there is a directed edge between two nodes $v_1,v_2 \in V$ if the influence would spread from $v_1$ to $v_2$ supposing $v_1$ was influenced.
 
 After every iteration is done we can create the output influence graph using $D$. First, we divide each value $d \in D_{values}$ by $I$. This way $\forall d \in D_{values}: 0 < d \leq 1$ is guaranteed. As the final step, we take the $keys$ from the dictionary as directed edges and the $value$ associated with the key as their weight to get $E''$ in $pairs(D)$. With vertices $V$ from the input benchmark graph and $E''$ we have generated the output influence graph $G''=(V,E'')$.
-
-%%=====================%%
-%% Community detection %%
-%%=====================%%
 
 \subsection{Community detection}\label{subsec_commdet}
 
@@ -301,17 +204,9 @@ The above mentioned extension step depends on two criteria given in the form of 
 
 After the extension step, we have found each new community initiative that fulfills our two criteria. Before adding these to the output community set $C$, we delete any $c \in C$ from $C$ that is a subset of any $c_{new} \in C_{new}$. Without this step, $C$ would contain numerous community initiatives that are subsets of bigger ones. Finally, we can add each newly found $c_{new} \in C_{new}$ community initiative to $C$. After $\kappa_{max}$ iterations are done, the output is produced in the form of the final community set $C$.
 
-%%==================%%
-%% Community values %%
-%%==================%%
-
 \subsection{Community values}\label{subsec_commval}
 
-Existing literature \citep{cim} has established that nodes, which belong to multiple communities, may play a significant role in the influence maximization problem. Thus we decided to assign a number called community value to each vertex in the graph. This value represents the number of communities a certain node belongs to. In other words, we defined a function $f(v): v \rightarrow Z$ that assigns this integer community value to each vertex. We took the community detection results for each benchmark graph -- influence model pair $(G,M)$ and then we created the $L_{GM}$ ordered lists of nodes based on their $f(v)$ community values in decreasing order. These lists will be used to generate the input of the narrowed search space greedy approach described in detail in \ref{subsec_narrowed}.
-
-%%===================================%%
-%% Greedy with narrowed search space %%
-%%===================================%%
+After the community detection step is done, we assign an integer to each vertex in the graph called \textit{community value}. This integer represents the number of communities a certain node belongs to. In other words, we defined a function $f(v): v \rightarrow Z$ that assigns this value to each vertex. We took the community detection results for each benchmark graph -- influence model pair $(G,M)$ and then we created the $L_{GM}$ ordered lists of nodes based on their $f(v)$ community values in decreasing order. These lists will be used to generate the input of the narrowed search space greedy approach described in detail in \ref{subsec_narrowed}.
 
 \subsection{Greedy with narrowed search space}\label{subsec_narrowed}
 
@@ -326,31 +221,19 @@ We took inspiration from \citet{evaluating} in narrowing down the search space o
 \begin{algorithmic}[1]
     \State $A_0 \leftarrow \emptyset$
     \State \textbf{While} $|A_{0}| \leq K$
-    \State \hspace{\algorithmicindent} $A_{0}=A_{0} \cup \ arg \ max_{v \in V^*(G) \setminus A_{0})} \sigma(A_{0} \cup \{v\})$
+    \State \hspace{\algorithmicindent} $A_{0}=A_{0} \cup \ arg \ max_{v \in V^*(G) \setminus A_{0}} \sigma(A_{0} \cup \{v\})$
 \end{algorithmic}
 \end{algorithm}
 
-Algorithm \ref{algo_greedy_narrow} with the narrowed search space is also approximated with the same technique described in Section \ref{subsec_greedy_approx} and only differs in two minor details from the original greedy approach in Algorithm \ref{algo_greedy}. The first difference is that the narrowed approach takes a narrowed node set $V^*(G) \subset V(G)$ as its input. This set contains the top $X\%$ nodes from the $L_{GM}$ ordered lists. Then, in each iteration the algorithm adds a single node to $A_{0}$ so that $\sigma(A_{i-1} \cup {v_i})$ is maximal. The second difference is that this vertex can only be chosen from the smaller set $V^*(G)$, not from all of the nodes $V(G)$ in the graph. With less choices in each iteration, the runtime of the whole greedy process can be significantly reduced.
-
-%%=====================%%
-%% Methodology summary %%
-%%=====================%%
+Algorithm \ref{algo_greedy_narrow} with the narrowed search space is approximated with the same technique as the original greedy approach and only differs in two minor details from Algorithm \ref{algo_greedy}. The first difference is that the narrowed approach takes a narrowed node set $V^*(G) \subset V(G)$ as its input. This set contains the top $X\%$ nodes from the $L_{GM}$ ordered lists. Then, in each iteration the algorithm adds a single node to $A_{0}$ so that $\sigma(A_{i-1} \cup {v_i})$ is maximal. The second difference is that this vertex can only be chosen from the smaller set $V^*(G)$, not from all of the nodes $V(G)$ in the graph. With less choices in each iteration, the runtime of the whole greedy process can be significantly reduced.
 
 \subsection{Methodology summary}\label{subsec_method_summ}
 
 To summarize, our aim is to create a novel process using influence models and community detection to locate the most influential nodes in directed and weighted networks. The developed method can take any discrete and finite influence model as its input that has a triggering model equivalent. From that point onward, the algorithm is general in that it always uses the same techniques and criteria to detect the above-mentioned communities. To demonstrate the potential of our concept, we choose the well-known influence maximization problem and narrow down its search space with the help of our community detection results. Regarding evaluation, we seek to observe how this new approach affects performance and runtime compared to the original greedy solution.
 
-%%====================%%
-%% Experimental setup %%
-%%====================%%
-
 \section{Experimental setup}\label{sec_setup}
 
 For testing and evaluating our previously described method, we use artificial and real-life benchmark networks. In this section, we give a brief summary of the datasets considered in our research.
-
-%%===================%%
-%% Artificial graphs %%
-%%===================%%
 
 \subsection{Artificial graphs}\label{subsec_artificial}
 
@@ -378,10 +261,6 @@ By default, this method only outputs graphs without node and edge weights, both 
 \item[--] edge weights: $min$: $0$, $max$: $0.2$
 \end{itemize}
 
-%%====================%%
-%% Real-life networks %%
-%%====================%%
-
 \subsection{Real-life networks}\label{subsec_reallife}
 
 After evaluating on smaller artificial graphs, we experiment with significantly larger real-life ones. We select five benchmark networks from the Stanford Large Network Dataset Collection \citep{stanfordlarge}, namely the following:
@@ -402,21 +281,13 @@ After evaluating on smaller artificial graphs, we experiment with significantly 
 
 We select these real-life networks to showcase a wide variety of node and edge counts along with some potential applications of our algorithm. All of the above-mentioned graphs are directed and unweighted by definition in \citet{stanfordlarge}, except for the ego-Facebook network, which is undirected. We made this one directed by converting each undirected edge to two directed ones in both directions. To generate weights for the nodes and edges, we use the same procedure as for the artificial graphs described in \ref{subsec_artificial}.
 
-%%=========%%
-%% Results %%
-%%=========%%
-
 \section{Results}\label{sec_results}
 
 As a proof-of-concept approach, we use our novel community detection method to rank the most influential nodes in networks and narrow the search space of the greedy influence maximization algorithm. Here we show how shrinking the possible node set affects overall performance and runtime compared to the greedy method selecting nodes from the whole the graph.
 
-%%==============================%%
-%% Results on artificial graphs %%
-%%==============================%%
-
 \subsection{Results on artificial graphs}\label{subsec_res_artificial}
 
-We begin our evaluation on the networks introduced in Section 4.1. First, we run the influence simulation algorithm described in \ref{subsec_infsim} to create the influence graphs that will be used as the input for our community detection method. We proceed with this for all three selected influence models. Regarding the parameters, we select the number of iterations to be $I = 10000$ and the maximum influence distance is set to $d_{max} = 2$. After creating the influence graphs, we draw the following inferences: there is (1) a considerable increase in the densities (number of edges) and average clustering coefficients and (2) a noticable decrease in the diameters and average edge weights compared to the input graphs. These observations can easily be explained with the characteristics of Algorithm \ref{algo_inf_sim}: in the influence graphs, every directed influence path from each simulation is taken into consideration, thereby creating additional edges compared to the original graph.
+We begin our evaluation on the networks introduced in Section 4.1. First, we run the influence simulation algorithm described in \ref{subsec_infsim} to create the influence graphs that will be used as the input for our community detection method. We proceed with this for all four selected influence models. Regarding the parameters, we select the number of iterations to be $I = 10000$ and the maximum influence distance is set to $d_{max} = 2$. After creating the influence graphs, we draw the following inferences: there is (1) a considerable increase in the densities (number of edges) and average clustering coefficients and (2) a noticable decrease in the diameters and average edge weights compared to the input graphs. These observations can easily be explained with the characteristics of Algorithm \ref{algo_inf_sim}: in the influence graphs, every directed influence path from each simulation is taken into consideration, thereby creating additional edges compared to the original graph.
 
 Regarding community detection, there are few quantitative metrics that can be analysed without actually using the community values in Algorithm \ref{algo_greedy_narrow}. Our primary observation is that different values set for the two hyperparameters $cp$ and $ta$ substantively affect runtime. Consequently, a timeout threshold is implemented to disregard any executions exceeding this time limit. For the Independent Cascade and Linear Threshold models, we omit around $10\%$ of the results due to long runtime. However, this is a drastically larger $60\%$ when the Only-Listen Once model is used for community detection. Our explanation for this phenomenon is that the average edge weights in the influence graphs for this model are relatively small compared to the weights for the other two models.
 
@@ -446,7 +317,7 @@ Before actually comparing the performance of the three above mentioned settings,
 
 The same conclusions can be derived from both heatmaps regarding further hyperparameter tuning: our results indicate that other parameter intervals should also be considered in future research. For example, trying higher $ta$ values for the Linear Threshold or higher $cp$ values for the Only-Listen-Once models could balance these charts towards the center. However, our findings - which are presented later in this chapter - suggest that the chosen hyperparameters were capable of producing adequate results.
 
-To compare performance on different models and types of graphs, we create the following 9 plots below in Figure \ref{fig_performance_models_parameters}. In each row, a certain graph parameter is fixed at a pre-defined value, and the other two parameters are shown on the \textit{x} and \textit{y} axis. These are the parameters that are used for artificially generating the graphs described in Section \ref{subsec_artificial}. The columns represent our three chosen influence models. The three graph generation parameters combined with the three influence models result in $3*3=9$ plots. The white rectangles represent the lowest, and the red ones the highest final influence values in each plot.
+To compare performance on different models and types of graphs, we create the following 9 plots below in Figure \ref{fig_performance_models_parameters}. In each row, a certain graph parameter is fixed at a pre-defined value, and the other two parameters are shown on the \textit{x} and \textit{y} axis. These are the parameters that are used for artificially generating the graphs described in Section \ref{subsec_artificial}. The columns represent our four chosen influence models. The three graph generation parameters combined with the four influence models result in $3*4=12$ plots. The white rectangles represent the lowest, and the red ones the highest final influence values in each plot.
 
 \begin{figure}[ht]
 \centering
@@ -459,7 +330,7 @@ As we can see, there are no distinct patterns that can be explicitly identified.
 
 Figure \ref{fig_performance} shows a performance comparison of different settings and models. We take the highest final influence values for each graph in each setting, and calculate an average value. Our main observation is that our \textit{Narrow greedy} setting achieves considerably better results than the \textit{Community values} setting, and is just a little worse than the \textit{Full greedy} setting. These results confirm our hypothesis that vertices with significant community roles are of utmost importance in solving the influence maximization problem.
 
-One notable advanatage of the \textit{Narrow greedy} setting using our novel community detection algorithm is its runtime. Figure \ref{fig_runtimes} demonstrates the average seconds required for each step in the pipeline, and their sum compared to the average runtime of the \textit{Full greedy} setting. For two of the three influence models, we managed to save substantial amounts of execution time in exchange for a marginal performance loss.
+One notable advanatage of the \textit{Narrow greedy} setting using our novel community detection algorithm is its runtime. Figure \ref{fig_runtimes} demonstrates the average seconds required for each step in the pipeline, and their sum compared to the average runtime of the \textit{Full greedy} setting. For two out of the four influence models, we managed to save substantial amounts of execution time in exchange for a marginal performance loss.
 
 \begin{figure}[ht]
 \centering
@@ -484,10 +355,6 @@ Another interesting aspect of our testing is the degree of overlap between the b
 \caption{Overlap of the best initially active node selections between the \textit{Full greedy} and \textit{Narrow greedy} settings for the artificial and real-life networks}
 \label{fig_overlap}
 \end{figure}
-
-%%===============================%%
-%% Results on real-life networks %%
-%%===============================%%
 
 \subsection{Results on real-life networks}\label{subsec_res_reallife}
 
@@ -576,10 +443,6 @@ Fortunately, our runtime statistics are also promising. Figures \ref{fig_runtime
 
 \colorbox{pink}{TODO} In this section, we also have to refer back to Figure \ref{fig_overlap} where we showcase the degree of overlap between the best initially active node selections for the \textit{Full greedy} and \textit{Narrow greedy} settings. For two of our five selected graphs, namely \textit{cit-HepPh} and \textit{email-EuAll}, quite high overlap percentages can be observed, ranging from $45\%-85\%$. These values are even higher than the ones for the smaller artificial networks. It means that in some cases, our community detection and search space narrowing solution combined selects almost the same nodes as the original greedy influence maximization method, but with considerably less runtime. We can also see that for the \textit{soc-Epinions1} network and the Independent Cascade model, none of the selected nodes were the same for the two settings ($0\%$ overlap). Entirely different node sets resulted in almost the same final influence values, which might be the consequence of the structure of this certain network.
 
-%%============%%
-%% Conclusions %%
-%%============%%
-
 \section{Conclusions}\label{sec_conclusions}
 
 The results presented in this study demonstrate the efficiency and versatility of our proposed generalized community detection algorithm and its application for the influence maximization problem. By giving the outputs of the influence simulations to our community detection process, we assign community values to each node in the selected benchmark networks. Then, we take the \textit{Narrow greedy} setting developed by Hajdu et al. that narrows the search space of the original greedy influence maximization algorithm. This approach significantly reduces computational costs, and has also proven effective across various network types, influence models, and benchmark datasets.
@@ -588,32 +451,17 @@ We demonstrated that our \textit{Narrow greedy} setting achieves results compara
 
 Our study highlights the critical role of community structure in influence maximization. By leveraging community values derived from overlapping community detection, we prove that nodes with significant community roles are highly influential in spreading processes. The \textit{Narrow greedy} setting consistently produced influence values comparable to the original \textit{Full greedy} algorithm, achieving this with substantially less runtime.
 
-Compared to existing methods, our approach offers a unique advantage: it eliminates the dependency of specific influence models, allowing for a broader range of applications. While prior studies focused on predefined models or specific community detection techniques, our method provides a generalized framework capable of adapting to various network structures and dynamics. This adaptability was demonstrated in its consistent performance across with three influence models: the Independent Cascade, the Linear Threshold and Only-Listen-Once models.
+Compared to existing methods, our approach offers a unique advantage: it eliminates the dependency of specific influence models, allowing for a broader range of applications. While prior studies focused on predefined models or specific community detection techniques, our method provides a generalized framework capable of adapting to various network structures and dynamics. This adaptability was demonstrated in its consistent performance across four influence models: the Independent Cascade, Linear Threshold, Only-Listen-Once and Decreasing Cascade models.
 
 Despite its strengths, our approach has certain limitations. First, the reliance on hyperparameter tuning for the variables $cp$ and $ta$ introduces an element of subjectivity and additional computational overhead during the fine-tuning process.  Second, the Only-Listen-Once influence model presented runtime challenges due to its lower average edge weights, highlighting a potential area for optimization.
 
 In terms of future work, expanding the range of compatible influence models can help capture even more diverse dynamics of influence propagation within networks. By refining our proposed methodology, it will be possible to develop more robust tools capable of handling the complexities of real-life scenarios, extending the scalability, precision, and practicality of the approaches introduced in our study.
 
-
-%%==================%%
-%% Acknowledgements %%
-%%==================%%
-
 \subsection*{Acknowledgements}\label{subsec_acknowledgements}
 
-Máté Vass has been supported by the European Union project RRF-2.3.1-21-2022-00004 within the framework of the Artificial Intelligence National Laboratory.
-
-Miklós Krész acknowledges the support  of the BioLOG project: he is grateful for the support of the National Center of Science (NCN) through grant DEC-2020/39/I/HS4/03533, the Slovenian Research and Innovation Agency (ARIS) through grant N1-0223 and the Austrian Science Fund (FWF) through grant I 5443-N. He has been also supported by the research program CogniCom (0013103) at the University of Primorska.
-
-%%==============%%
-%% Declarations %%
-%%==============%%
+Máté Vass has been supported by the European Union project RRF-2.3.1-21-2022-00004 within the framework of the Artificial Intelligence National Laboratory. Miklós Krész acknowledges the support  of the BioLOG project: he is grateful for the support of the National Center of Science (NCN) through grant DEC-2020/39/I/HS4/03533, the Slovenian Research and Innovation Agency (ARIS) through grant N1-0223 and the Austrian Science Fund (FWF) through grant I 5443-N. He has been also supported by the research program CogniCom (0013103) at the University of Primorska.
 
 \section*{Declarations}\label{sec_declarations}
-
-%%======================%%
-%% Author contributions %%
-%%======================%%
 
 \subsection*{Author contributions}\label{subsec_contributions}
 
@@ -637,17 +485,54 @@ The authors contributed to this work as follows:
 \item \textbf{Writing – review \& editing:} Máté Vass, Miklós Krész, András Bóta
 \end{itemize}
 
-%%=====================%%
-%% Competing interests %%
-%%=====================%%
-
 \subsection*{Competing interests}\label{subsec_competing}
 
 The authors declare no competing interests.
 
-%%==============%%
-%% Bibliography %%
-%%==============%%
+\subsection*{Data \& code availability}\label{subsec_datacode}
+
+\colorbox{pink}{TODO}
+
+\begin{appendices}
+
+\section{Influence models}\label{appendix_models}
+
+\subsection{Independent Cascade model}
+
+In the Independent Cascade (IC) model \citep{kempe} nodes try to activate their inactive neighbors according the the influence transmission values between them starting from the set of initially active nodes $A_0$. However, in any iteration $i$, only the newly activated nodes, activated in iteration $i-1$, are able to activate their inactive neighbors. This effectively creates another state for the nodes: activated, newly activated and inactive. These newly activated nodes have one chance to activate each of their inactive neighbors according to the $w_{u,v}$ influence probability assigned to the edge connecting them. If the attempt is successful, the target node will become active in iteration $i$. If a node has multiple newly activated neighbors, the activation attempts are made in an arbitrary order independently of each other.
+
+\subsection{Linear Threshold model}
+
+The Linear Threshold model, initially proposed by \citet{granovetter} was later reformulated for graphs in \citet{kempe}. The model has additional requirements for the influence transmission values (weights): for each node $v$, $\sum_{w \in N^+_v} w_{u,v} \leq 1$: the weights on the in-edges of a node may sum up to 1 at maximum. This model also assigns thresholds to each node at the beginning of the process either randomly or with a user specified strategy. These thresholds are denoted as $\theta_v$ for all $v \in V(G)$. The model starts from the set of initially active nodes $A_0$ at iteration $0$. At iteration $i$ all nodes remain active that were active in the previous iteration, and any node $v$ becomes active if the total weight of its active neighbors exceed $\theta_v$: $\sum_{w \in N^+_v} w_{u,v} \geq \theta_v$.
+
+\subsection{Only-Listen-Once model}
+
+The Only-Listen-Once model was also introduced in \citet{kempe} and - like in the Linear Threshold model - each node $n$ has a weight $0 < p_{n} \leq 1$ assigned to them. In this model, the first active neighboring node of $n$ tries to activate it with probability $p_{n}$ and any further attempt will inevitably fail. This means that $n$ only "listens" to the first neighbor that tries to activate it. The whole activation process unfolds the same way as in the Independent Cascade or Linear Threshold model in finite, discrete time steps.
+
+\subsection{Decreasing Cascade model}
+
+\colorbox{pink}{TODO}
+
+\section{Greedy algorithm of Kempe et al.}\label{appendix_greedy}
+
+The greedy influence maximization heuristic of \citet{kempe} starts with an empty initial set $A_0$ and iteratively adds nodes to it until $|A_0| = K$, in each step maximizing $\sigma(A_0)$ with greedy decisions. Algorithm \ref{algo_greedy} shows the pseudocode of the greedy method.
+
+\begin{algorithm}[ht]
+\caption{Greedy method}
+\label{algo_greedy}
+\textbf{Input:} $G(V,E)$ benchmark graph, $K$: desired size of $A_0$
+\\
+\textbf{Output:} $A_{0}$ initially influenced set
+\begin{algorithmic}[1]
+    \State $A_0 \leftarrow \emptyset$
+    \State \textbf{While} $|A_{0}| \leq K$
+    \State \hspace{\algorithmicindent} $A_{0}=A_{0} \cup \ arg \ max_{v \in (V(G) \setminus A_{0})} \sigma(A_{0} \cup \{v\})$
+\end{algorithmic}
+\end{algorithm}
+
+The algorithm starts with $A_0 = \emptyset$. In each iteration $i$, a node $v_i$ is selected from $V$, so that $\sigma(A_{i-1} \cup {v_i})$ is maximal. This process stops when the size of $A_i$ reaches $K$. The proposed method can be computationally expensive for two main reasons. Computing $\sigma$ itself can be time consuming especially for large graphs. Furthermore, in each iteration, the greedy algorithm has to evaluate $\sigma$ for $|V(G)| \setminus A_i$, which again, for large graphs, can be time consuming. We refer to two heuristics to solve these issues in the next section.
+
+\end{appendices}
 
 \bibliography{sn-bibliography}
 
