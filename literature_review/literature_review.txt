@@ -28,29 +28,29 @@ Influence maximization in social networks - a survey of behaviour-aware methods 
 ############# There are other researchers who think communities are important #################
 ###############################################################################################
 
-A Community-Aware Framework for Social Influence Maximization (2023)
+✅ A Community-Aware Framework for Social Influence Maximization (2023)
 - IC, LT
 - do community detection
 - solve the IM for the communities
 - select final seed set by solving an ILP problem
 - new diagram type we should also consider: X axis --> budget k, Y axis --> influence
 
-FIP - A fast overlapping community-based influence maximization algorithm using probability coefficient of global diffusion in social networks (2023)
+✅ FIP - A fast overlapping community-based influence maximization algorithm using probability coefficient of global diffusion in social networks (2023)
 - Q1 journal
 - very good literature review
 - compares to other community-based solutions
 - can get some more ideas from the article
 
-Fair Influence Maximization in Social Networks - A Community-Based Evolutionary Algorithm (2024)
-- community detection is the base
-- spread influence evenly across communities
-
-Influence maximization algorithm based on group trust and local topology structure (2024)
+✅ Influence maximization algorithm based on group trust and local topology structure (2024)
 - conecpts of intra-group connectivity, inter-group diffusion and group trust are defined
 - both group trust and local topology is taken into consideration
 - here group ~ community
 
-Overlapping community-based fair influence maximization in social networks under open-source development model algorithm (2025)
+✅ Fair Influence Maximization in Social Networks - A Community-Based Evolutionary Algorithm (2024)
+- community detection is the base
+- spread influence evenly across communities
+
+✅ Overlapping community-based fair influence maximization in social networks under open-source development model algorithm (2025)
 - IC
 - fair IM --> equitable distribution of influence across communities
 - novel overlapping community detection and existing optimization methods
@@ -117,20 +117,20 @@ An improved influence maximization method for social networks based on genetic a
 ########### Variations of influence maximization - balanced spread across the graph ###########
 ###############################################################################################
 
-Community-diversified influence maximization in social networks (2020)
+✅ Community-diversified influence maximization in social networks (2020)
 - community-diversified influence maximization
 - proposes a metric to measure the community-diversified influence
 
-Balanced influence maximization in social networks based on deep reinforcement learning (2024)
+✅ Balanced influence maximization in social networks based on deep reinforcement learning (2024)
 - balanced influence
 - ML-based approach
 - uses networks where more metadata is available
 
-Fair Influence Maximization in Social Networks - A Community-Based Evolutionary Algorithm (2024)
+✅ Fair Influence Maximization in Social Networks - A Community-Based Evolutionary Algorithm (2024)
 - community detection is the base
 - spread influence evenly across communities
 
-Overlapping community-based fair influence maximization in social networks under open-source development model algorithm (2025)
+✅ Overlapping community-based fair influence maximization in social networks under open-source development model algorithm (2025)
 - IC
 - fair IM --> equitable distribution of influence across communities
 - novel overlapping community detection and existing optimization methods
