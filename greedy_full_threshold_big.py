@@ -1,18 +1,17 @@
 from pytictoc import TicToc
 import pandas as pd
 import networkx as nx
-import numpy as np
 import random
 from tqdm import tqdm
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-#graphs = ["Cit-HepPh"]
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["ego-Facebook", "Wiki-Vote"]
 instances_greedy = 10
 instances_final = 100
 k = 50
 
 t = TicToc()
-runtimes_path = "runtimes/greedy_full_big/threshold.txt"
+runtimes_path = "runtimes/greedy_full_big/threshold_new.txt"
 with open(runtimes_path, "w") as runtimes_output:
     runtimes_output.write("Runtimes (s) - greedy instances: " + str(instances_greedy)
                           + " - final instances: " + str(instances_final) + "\n")

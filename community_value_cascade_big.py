@@ -5,12 +5,12 @@ import numpy as np
 import os
 
 # graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-graphs = ["soc-Epinions1"]
+graphs = ["Wiki-Vote"]
 instances_final = 100
 k = 50
 
-connected_percent = [0.7, 0.75, 0.8,]
-times_average = [35, 35.5, 36]
+connected_percent = [0.7, 0.75, 0.8]
+times_average = [9, 9.5, 10]
 
 t = TicToc()
 

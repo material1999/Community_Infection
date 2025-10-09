@@ -3,12 +3,13 @@ import pandas as pd
 import networkx as nx
 import numpy as np
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["ego-Facebook", "Wiki-Vote"]
 instances_infection_graph = 10000
 cutoff = 2
 
 t = TicToc()
-runtimes_path = "runtimes/infection_graphs_big/onlylistenonce.txt"
+runtimes_path = "runtimes/infection_graphs_big/onlylistenonce_new.txt"
 with open(runtimes_path, "w") as runtimes_output:
     runtimes_output.write("Runtimes (s) - instances: " + str(instances_infection_graph)
                           + " - cutoff: " + str(cutoff) + "\n")

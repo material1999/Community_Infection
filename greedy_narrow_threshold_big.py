@@ -5,17 +5,17 @@ import random
 import os
 from tqdm import tqdm
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-# graphs = ["Cit-HepPh"]
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["Wiki-Vote"]
 
 instances_greedy = 10
 instances_final = 100
 
 k = 50
-narrow = {"Cit-HepPh": 6909, "Email-EuAll": 53042, "soc-Epinions1": 15175}
+narrow = {"Cit-HepPh": 6909, "Email-EuAll": 53042, "soc-Epinions1": 15175, "Wiki-Vote": 1423}
 
 connected_percent = [0.7, 0.75, 0.8]
-times_average = [7, 7.5, 8]
+times_average = [22, 22.5, 23]
 
 t = TicToc()
 runtimes_path = "runtimes/greedy_narrow_big/threshold.txt"
@@ -49,7 +49,7 @@ for graph in graphs:
 
             t.tic()
 
-            greedy_narrow_path = ("results/greedy_narrow_big/threshold/" + str(graph_num) + "_" +
+            greedy_narrow_path = ("results/greedy_narrow_big/threshold/" + graph + "_" +
                                 str(int(c_p*100)) + "%_" + str(t_a) + "x.csv")
             with open(greedy_narrow_path, 'w') as greedy_full_output:
                 greedy_full_output.write("greedy instances: " + str(instances_greedy) +
@@ -87,7 +87,7 @@ for graph in graphs:
                             community_values[node] += 1
 
             community_values_sorted = dict(sorted(community_values.items(), key=lambda item: item[1], reverse=True))
-            possible_nodes = list(community_values_sorted.keys())[:narrow]
+            possible_nodes = list(community_values_sorted.keys())[:narrow[graph]]
             ####################################################################################################
             best_k = list()
 
@@ -149,7 +149,7 @@ for graph in graphs:
             for instance_num in range(1, instances_final + 1):
 
                 G = nx.DiGraph()
-                G.add_nodes_from(range(1, 1000 + 1))
+                G.add_nodes_from(all_nodes)
 
                 for vertex in all_nodes:
                     choice = random.choices(incoming_edges_dict[vertex][0],

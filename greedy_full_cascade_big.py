@@ -4,14 +4,14 @@ import networkx as nx
 import numpy as np
 from tqdm import tqdm
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-#graphs = ["Cit-HepPh"]
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["ego-Facebook", "Wiki-Vote"]
 instances_greedy = 10
 instances_final = 100
 #k_percent = 0.05
 
 t = TicToc()
-runtimes_path = "runtimes/greedy_full_big/cascade.txt"
+runtimes_path = "runtimes/greedy_full_big/cascade_new.txt"
 with open(runtimes_path, "w") as runtimes_output:
     runtimes_output.write("Runtimes (s) - greedy instances: " + str(instances_greedy)
                           + " - final instances: " + str(instances_final) + "\n")

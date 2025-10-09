@@ -3,12 +3,13 @@ import pandas as pd
 import networkx as nx
 import numpy as np
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-instances_infection_graph = 1000
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["ego-Facebook", "Wiki-Vote"]
+instances_infection_graph = 10000
 cutoff = 2
 
 t = TicToc()
-runtimes_path = "runtimes/infection_graphs_big/cascade.txt"
+runtimes_path = "runtimes/infection_graphs_big/cascade_new.txt"
 with open(runtimes_path, "w") as runtimes_output:
     runtimes_output.write("Runtimes (s) - instances: " + str(instances_infection_graph)
                           + " - cutoff: " + str(cutoff) + "\n")
@@ -22,6 +23,7 @@ for graph in graphs:
     print("Reading graph " + graph)
     graph_path = "data/big_graphs_weighted/" + graph + ".csv"
     graph_df = pd.read_csv(graph_path, sep=";", header=None)
+    graph_df.columns = ["V1", "V2", "edgeweight"]
 
     all_nodes = pd.concat([graph_df['V1'], graph_df['V2']]).unique().tolist()
 
@@ -35,8 +37,8 @@ for graph in graphs:
     for instance_num in range(1, instances_infection_graph + 1):
 
         # Create instances
-        # print("graph: " + str(graph_num) + " --- instance: " + str(instance_num)
-        #       + "/" + str(instances_infection_graph))
+        print("graph: " + graph + " --- instance: " + str(instance_num)
+              + "/" + str(instances_infection_graph))
 
         G = nx.DiGraph()
         G.add_nodes_from(all_nodes)

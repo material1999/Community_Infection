@@ -1,6 +1,7 @@
 import numpy as np
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["ego-Facebook", "Wiki-Vote"]
 
 for graph in graphs:
     big_graph_path = "data/big_graphs/" + graph + ".txt"

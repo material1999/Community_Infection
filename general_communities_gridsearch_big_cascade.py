@@ -7,11 +7,11 @@ from tqdm import tqdm
 # graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
 # graphs = ["ego-Facebook", "Wiki-Vote"]
 graphs = ["Wiki-Vote"]
-infection_model = "threshold"
+infection_model = "cascade"
 
 max_community_size = 50
 connected_percent = [0.7, 0.75, 0.8]
-times_average = [22, 22.5, 23]
+times_average = [9, 9.5, 10]
 
 ### Cit-HepPh: 50 --- soc-Epinions1: 25 --- Email-EuAll: 25
 keep_neighbors = 50

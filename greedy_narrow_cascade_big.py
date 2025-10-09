@@ -6,16 +6,16 @@ import os
 from tqdm import tqdm
 
 # graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
-graphs = ["Cit-HepPh"]
+graphs = ["Wiki-Vote"]
 
 instances_greedy = 10
 instances_final = 100
 
 k = 50
-narrow = {"Cit-HepPh": 6909, "Email-EuAll": 53042, "soc-Epinions1": 15175}
+narrow = {"Cit-HepPh": 6909, "Email-EuAll": 53042, "soc-Epinions1": 15175, "Wiki-Vote": 1423}
 
 connected_percent = [0.7, 0.75, 0.8]
-times_average = [7, 7.5, 8]
+times_average = [9, 9.5, 10]
 
 t = TicToc()
 runtimes_path = "runtimes/greedy_narrow_big/cascade.txt"

@@ -2,7 +2,8 @@ import random
 import os
 import pandas as pd
 
-graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+graphs = ["ego-Facebook", "Wiki-Vote"]
 
 min_value = 0.05
 max_value = 0.1
