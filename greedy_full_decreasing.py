@@ -1,0 +1,145 @@
+from pytictoc import TicToc
+import pandas as pd
+import networkx as nx
+import numpy as np
+
+# graphs = 1080
+graphs = 1
+instances_greedy = 100
+instances_final = 10000
+k = 50
+decrease = 0.1
+
+t = TicToc()
+runtimes_path = "runtimes/greedy_full/decreasing.txt"
+with open(runtimes_path, "w") as runtimes_output:
+    runtimes_output.write("Runtimes (s) - greedy instances: " + str(instances_greedy)
+                          + " - final instances: " + str(instances_final) + "\n")
+
+for graph_num in range(1, graphs + 1):
+
+    t.tic()
+
+    print("##################################################")
+    print("Reading graph #" + str(graph_num))
+    graph_path = "data/networks/" + str(graph_num) + "/edgeweighted.csv"
+
+    possible_nodes = range(1, 1000 + 1)
+
+    graph_df = pd.read_csv(graph_path, sep=";")
+    G = nx.DiGraph()
+    G.add_nodes_from(possible_nodes)
+    for row in graph_df.itertuples():
+        G.add_edge(int(row[1]), int(row[2]), weight=row[3])
+    print(G)
+
+    out_edges_precompute = {u: list(G.out_edges(u, data=True)) for u in G.nodes()}
+
+    greedy_full_path = "results/greedy_full/decreasing/" + str(graph_num) + ".csv"
+    with open(greedy_full_path, 'w') as greedy_full_output:
+        greedy_full_output.write("greedy instances: " + str(instances_greedy) +
+                                 " - final instances: " + str(instances_final) +
+                                 " - k: " + str(k) + "\n")
+
+    print("Greedy for graph #" + str(graph_num) + " in progress...")
+
+    best_k = list()
+
+    for i in range(1, k + 1):
+
+        print("k: " + str(i))
+        best_node = 0
+        best_inf = 0
+        node_infections = dict()
+
+        for node in possible_nodes:
+            if node not in best_k:
+
+                temp_nodes = set(best_k)
+                temp_nodes.add(node)
+
+                infected_sum = 0
+
+                for instance_num in range(1, instances_greedy + 1):
+
+                    infected_instance = set()
+                    attempts = dict()
+                    prev_weight = dict()
+
+                    # out_edges = list(G.out_edges(temp_nodes, data=True))
+                    out_edges = [edge for node in temp_nodes for edge in out_edges_precompute[node]]
+
+                    j = 0
+                    while j < len(out_edges):
+                        edge = out_edges[j]
+                        j += 1
+
+                        if edge[1] in infected_instance:
+                            continue
+                        if edge[1] not in attempts:
+                            weight = edge[2]['weight']
+                        else:
+                            temp = weight = edge[2]['weight']
+                            if attempts[edge[1]] == 1:
+                                weight = 1 - ((1 - temp) / (1 - prev_weight[edge[1]])) * (
+                                        1 - prev_weight[edge[1]] * (1 - decrease))
+                            else:
+                                weight = 0
+
+                        r = np.random.rand()
+                        if r < weight:
+                            infected_instance.add(edge[1])
+                            out_edges.extend(out_edges_precompute[edge[1]])
+                        else:
+                            attempts[edge[1]] = attempts.get(edge[1], 0) + 1
+                            prev_weight[edge[1]] = weight
+
+                    infected_sum += len(infected_instance)
+
+                infected_avg = infected_sum / instances_greedy
+                if infected_avg >= best_inf:
+                    best_inf = infected_avg
+                    best_node = node
+
+        best_k.append(best_node)
+
+        with open(greedy_full_path, "a") as greedy_full_output:
+            greedy_full_output.write(str(i) + " --- " + str(best_k) + " --- " + str(best_inf) + "\n")
+
+    ####################################################################################################
+
+    # final_inf = 0
+    #
+    # for instance_num in range(1, instances_final + 1):
+    #
+    #     G = nx.DiGraph()
+    #     G.add_nodes_from(range(1, 1000 + 1))
+    #
+    #     for row in graph_df.itertuples():
+    #         r = np.random.rand()
+    #         if r < row[3]:
+    #             G.add_edge(int(row[1]), int(row[2]))
+    #
+    #     reached_nodes = set()
+    #     temp_nodes = set(best_k)
+    #     while temp_nodes:
+    #         temp_node = temp_nodes.pop()
+    #         reached_nodes.add(temp_node)
+    #         temp_nodes.update([item for item in G.neighbors(temp_node) if item not in reached_nodes])
+    #
+    #     final_inf += len(reached_nodes)
+    #     # print(reached_nodes)
+    #
+    # final_inf /= instances_final
+    # # print(final_inf)
+    #
+    # with open(greedy_full_path, "a") as greedy_full_output:
+    #     greedy_full_output.write("final infection: " + str(final_inf) + "\n")
+
+    ####################################################################################################
+
+    print("Greedy for graph #" + str(graph_num) + " finished")
+    runtime = t.tocvalue()
+    print("Runtime:", runtime, "s")
+    with open(runtimes_path, "a") as runtimes_output:
+        runtimes_output.write(str(graph_num) + ": " + str(runtime) + "\n")
