@@ -5,7 +5,7 @@ import numpy as np
 
 # graphs = 1080
 graphs = 1
-instances_greedy = 100
+instances_greedy = 1
 instances_final = 10000
 k = 50
 decrease = 0.1
@@ -48,9 +48,8 @@ for graph_num in range(1, graphs + 1):
     for i in range(1, k + 1):
 
         print("k: " + str(i))
-        best_node = 0
+        best_node = None
         best_inf = 0
-        node_infections = dict()
 
         for node in possible_nodes:
             if node not in best_k:
@@ -66,7 +65,6 @@ for graph_num in range(1, graphs + 1):
                     attempts = dict()
                     prev_weight = dict()
 
-                    # out_edges = list(G.out_edges(temp_nodes, data=True))
                     out_edges = [edge for node in temp_nodes for edge in out_edges_precompute[node]]
 
                     j = 0
@@ -79,12 +77,13 @@ for graph_num in range(1, graphs + 1):
                         if edge[1] not in attempts:
                             weight = edge[2]['weight']
                         else:
-                            temp = weight = edge[2]['weight']
                             if attempts[edge[1]] == 1:
+                                temp = edge[2]['weight']
                                 weight = 1 - ((1 - temp) / (1 - prev_weight[edge[1]])) * (
                                         1 - prev_weight[edge[1]] * (1 - decrease))
                             else:
                                 weight = 0
+                                continue
 
                         r = np.random.rand()
                         if r < weight:
