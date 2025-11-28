@@ -3,9 +3,9 @@ import pandas as pd
 import networkx as nx
 import numpy as np
 
-# graphs = 1080
-graphs = 1
-instances_greedy = 1
+# graphs = 1
+graphs = 1080
+instances_greedy = 100
 instances_final = 10000
 k = 50
 decrease = 0.1
@@ -16,7 +16,7 @@ with open(runtimes_path, "w") as runtimes_output:
     runtimes_output.write("Runtimes (s) - greedy instances: " + str(instances_greedy)
                           + " - final instances: " + str(instances_final) + "\n")
 
-for graph_num in range(1, graphs + 1):
+for graph_num in range(1, graphs + 1, 10):
 
     t.tic()
 
@@ -56,6 +56,7 @@ for graph_num in range(1, graphs + 1):
 
                 temp_nodes = set(best_k)
                 temp_nodes.add(node)
+                base_out_edges = [edge for node in temp_nodes for edge in out_edges_precompute[node]]
 
                 infected_sum = 0
 
@@ -65,35 +66,35 @@ for graph_num in range(1, graphs + 1):
                     attempts = dict()
                     prev_weight = dict()
 
-                    out_edges = [edge for node in temp_nodes for edge in out_edges_precompute[node]]
+                    out_edges = base_out_edges[:]
 
                     j = 0
                     while j < len(out_edges):
                         edge = out_edges[j]
+                        to_node = edge[1]
                         j += 1
 
-                        if edge[1] in infected_instance:
+                        if to_node in infected_instance:
                             continue
-                        if edge[1] not in attempts:
+                        if to_node not in attempts:
                             weight = edge[2]['weight']
                         else:
-                            if attempts[edge[1]] == 1:
+                            if attempts[to_node] == 1:
                                 temp = edge[2]['weight']
-                                weight = 1 - ((1 - temp) / (1 - prev_weight[edge[1]])) * (
-                                        1 - prev_weight[edge[1]] * (1 - decrease))
+                                weight = 1 - ((1 - temp) / (1 - prev_weight[to_node])) * (
+                                        1 - prev_weight[to_node] * (1 - decrease))
                             else:
                                 weight = 0
                                 continue
 
                         r = np.random.rand()
                         if r < weight:
-                            infected_instance.add(edge[1])
-                            out_edges.extend(out_edges_precompute[edge[1]])
+                            infected_instance.add(to_node)
+                            infected_sum += 1
+                            out_edges.extend(out_edges_precompute[to_node])
                         else:
-                            attempts[edge[1]] = attempts.get(edge[1], 0) + 1
-                            prev_weight[edge[1]] = weight
-
-                    infected_sum += len(infected_instance)
+                            attempts[to_node] = attempts.get(to_node, 0) + 1
+                            prev_weight[to_node] = weight
 
                 infected_avg = infected_sum / instances_greedy
                 if infected_avg >= best_inf:
