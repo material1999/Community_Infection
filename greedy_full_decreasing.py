@@ -108,33 +108,52 @@ for graph_num in range(1, graphs + 1, 10):
 
     ####################################################################################################
 
-    # final_inf = 0
-    #
-    # for instance_num in range(1, instances_final + 1):
-    #
-    #     G = nx.DiGraph()
-    #     G.add_nodes_from(range(1, 1000 + 1))
-    #
-    #     for row in graph_df.itertuples():
-    #         r = np.random.rand()
-    #         if r < row[3]:
-    #             G.add_edge(int(row[1]), int(row[2]))
-    #
-    #     reached_nodes = set()
-    #     temp_nodes = set(best_k)
-    #     while temp_nodes:
-    #         temp_node = temp_nodes.pop()
-    #         reached_nodes.add(temp_node)
-    #         temp_nodes.update([item for item in G.neighbors(temp_node) if item not in reached_nodes])
-    #
-    #     final_inf += len(reached_nodes)
-    #     # print(reached_nodes)
-    #
-    # final_inf /= instances_final
-    # # print(final_inf)
-    #
-    # with open(greedy_full_path, "a") as greedy_full_output:
-    #     greedy_full_output.write("final infection: " + str(final_inf) + "\n")
+    infected_sum = 0
+
+    temp_nodes = set(best_k)
+    base_out_edges = [edge for node in temp_nodes for edge in out_edges_precompute[node]]
+
+    for instance_num in range(1, instances_final + 1):
+
+        infected_instance = set()
+        attempts = dict()
+        prev_weight = dict()
+
+        out_edges = base_out_edges[:]
+
+        j = 0
+        while j < len(out_edges):
+            edge = out_edges[j]
+            to_node = edge[1]
+            j += 1
+
+            if to_node in infected_instance:
+                continue
+            if to_node not in attempts:
+                weight = edge[2]['weight']
+            else:
+                if attempts[to_node] == 1:
+                    temp = edge[2]['weight']
+                    weight = 1 - ((1 - temp) / (1 - prev_weight[to_node])) * (
+                            1 - prev_weight[to_node] * (1 - decrease))
+                else:
+                    weight = 0
+                    continue
+
+            r = np.random.rand()
+            if r < weight:
+                infected_instance.add(to_node)
+                infected_sum += 1
+                out_edges.extend(out_edges_precompute[to_node])
+            else:
+                attempts[to_node] = attempts.get(to_node, 0) + 1
+                prev_weight[to_node] = weight
+
+    final_inf = infected_sum / instances_final
+    final_inf += k
+
+    with open(greedy_full_path, "a") as greedy_full_output:
+        greedy_full_output.write("final infection: " + str(final_inf) + "\n")
 
     ####################################################################################################
 
