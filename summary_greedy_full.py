@@ -1,6 +1,6 @@
 graphs = 1080
 mode = "greedy_full"
-infection_model = "onlylistenonce"
+infection_model = "decreasing"
 
 output_path = ("_office/results/" + mode + "/summary/" + infection_model + ".csv")
 
