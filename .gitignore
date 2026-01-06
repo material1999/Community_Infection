@@ -12,3 +12,5 @@ visualizations/results/*
 *.png
 .ropeproject
 literature_review
+visualizations_backup
+visualizations/.Rapp.history
