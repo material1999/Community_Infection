@@ -1,7 +1,7 @@
 import os
 
-mode = "greedy_narrow_20"
-infection_model = "threshold"
+mode = "greedy_narrow"
+infection_model = "decreasing"
 
 graphs = 1080
 connected_percent = [0.4, 0.45, 0.5, 0.55, 0.6]
