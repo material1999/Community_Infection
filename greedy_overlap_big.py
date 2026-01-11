@@ -1,10 +1,10 @@
 import os
 
-# graphs = ["Cit-HepPh", "Email-EuAll", "soc-Epinions1"]
+# graphs = ["Wiki-Vote", "Cit-HepPh", "soc-Epinions1", "Email-EuAll"]
 graph = "Email-EuAll"
-model = "onlylistenonce"
+model = "decreasing"
 connected_percent = [0.7, 0.75, 0.8]
-times_average = [24, 24.5, 25]
+times_average = [13, 13.5, 14]
 k = 50
 
 greedy_full_path = "_office/results/greedy_full_big/" + model + "/" + graph + ".csv"

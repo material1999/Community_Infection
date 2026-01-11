@@ -1088,22 +1088,22 @@ plot22 <- ggplot(data = keep, aes(x = MU, y = ON, fill = VALUE)) +
 
 ############################## COMBINED PLOT GRAPH VARIABLES ############################## add plots 20, 21, 22 ❌
 
-combined_plot <- plot9 + plot10 + plot11 +
-  plot12 + plot13 + plot14 +
-  plot15 + plot16 + plot17 +
-  plot_layout(ncol = 3) +
+combined_plot <- plot9 + plot10 + plot11 + plot20 +
+  plot12 + plot13 + plot14 + plot21 +
+  plot15 + plot16 + plot17 + plot22 +
+  plot_layout(ncol = 4) +
   plot_annotation(tag_levels = 'A')
 
-ggsave("visualizations/combined_plot_3x3.png", combined_plot, width = 16, height = 12)
+ggsave("visualizations/combined_plot_4x4.png", combined_plot, width = 24, height = 12)
 
 ############################## COMPARISON OF INFLUENCE VALUES ############################## ❌
 
 data <- data.frame(
   Settings = rep(c("Community values (best)", "Narrow greedy (best)", "Full greedy"), each = 4),
   Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once", "Decreasing Cascade"), times = 3),
-  Value = c(147.82, 156.96, 65.63, NaN,
-            170.32, 183.30, 74.49, NaN,
-            173.42, 186.09, 78.55, NaN)
+  Value = c(147.82, 156.96, 65.63, 145.74,
+            170.32, 183.30, 74.49, 151.45,
+            173.42, 186.09, 78.55, 144.39)
 )
 
 data$Settings <- factor(data$Settings, levels = c("Community values (best)", "Narrow greedy (best)", "Full greedy"))
@@ -1140,7 +1140,7 @@ data <- data.frame(
   Value = c(103, 16, 158, 374,
             48, 34, 74, 262,
             31, 139, 51, 128,
-            213, 110, NaN, 4139),
+            213, 110, 690, 4139),
   Type = rep(c("Stacked", "Stacked", "Stacked", "Full greedy"), times = 4)
 )
 
@@ -1338,7 +1338,7 @@ plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Ste
 
 ggsave("visualizations/plot_runtime_socepinions.png", plot_comparison_of_runtimes, width = 8, height = 6)
 
-############################## COMPARISON OF INFLUENCE VALUES EMAILEUALL ############################## ❌
+############################## COMPARISON OF INFLUENCE VALUES EMAILEUALL ############################## ✅
 
 data <- data.frame(
   Settings = rep(c("Community values (best)", "Narrow greedy (best)", "Full greedy"), each = 4),
@@ -1367,7 +1367,7 @@ plot_comparison_of_influence_values <- ggplot(data, aes(x = Model, y = Value, fi
 
 ggsave("visualizations/plot_performance_emaileuall.png", plot_comparison_of_influence_values, width = 8, height = 6)
 
-############################## COMPARISON OF RUNTIMES EMAILEUALL ############################## ❌
+############################## COMPARISON OF RUNTIMES EMAILEUALL ############################## ✅
 
 data <- data.frame(
   Steps = c(
@@ -1503,13 +1503,10 @@ ggsave("visualizations/plot_runtime_wikivote.png", plot_comparison_of_runtimes, 
 data <- data.frame(
   Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once", "Decreasing Cascade"), each = 5),
   Graph = rep(c("Artificial (avg)", "Wiki-Vote", "cit-HepPh", "soc-Epinions1", "email-EuAll"), times = 4),
-  #Value = c(36.64815, 54, 0, 52,
-            #38.25926, 80, 44, 84,
-            #16.76636, 44, 12, 52)
-  Value = c(36.64815, 0, 54, 0, 52,
-            38.25926, 0, 80, 44, 84,
-            16.76636, 0, 44, 12, 52,
-            NaN, NaN, NaN, NaN, NaN)
+  Value = c(36.64815, 40, 54, 0, 52,
+            38.25926, 56, 80, 44, 84,
+            16.76636, 38, 44, 12, 52,
+            14.90741, 4, 2, 0, 0)
 )
 
 data$Model <- factor(data$Model, levels = c("Independent Cascade", "Linear Threshold", "Only-Listen-Once", "Decreasing Cascade"))

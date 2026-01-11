@@ -1,7 +1,7 @@
 import os
 
 graphs = 1080
-model = "onlylistenonce"
+model = "decreasing"
 connected_percent = [0.4, 0.45, 0.5, 0.55, 0.6]
 times_average = [4, 4.5, 5, 5.5, 6]
 k = 50
@@ -29,10 +29,12 @@ for graph_num in range(1, graphs + 1, 10):
             if os.path.isfile(greedy_narrow_path):
                 greedy_narrow_file = open(greedy_narrow_path)
                 final = float(greedy_narrow_file.readlines()[51].split(": ")[1].strip())
+                print(final)
 
                 if final > best:
                     best = final
                     best_path = greedy_narrow_path
+                    print(best_path)
 
     greedy_narrow_file = open(best_path)
     content_narrow = [int(x) for x in greedy_narrow_file.readlines()[50].split(" --- ")[1]

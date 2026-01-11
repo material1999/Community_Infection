@@ -1,15 +1,24 @@
 cascade: 36.64815%
 threshold: 38.25926%
 onlylistenonce: 16.76636%
+decreasing: 14.907407407407405%
+
+wikivote - cascade: 40%
+wikivote - threshold: 56%
+wikivote - onlylistenonce: 38%
+wikivote - decreasing: 4%
 
 cithep - cascade: 54%
 cithep - threshold: 80%
 cithep - onlylistenonce: 44%
+cithep - decreasing: 2%
 
 socepinions - cascade: 0%
 socepinions - threshold: 44%
 socepinions - onlylistenonce: 12%
+socepinions - decreasing: 0%
 
 emaileuall - cascade: 52%
 emaileuall - threshold: 84%
 emaileuall - onlylistenonce: 52%
+socepinions - decreasing: 0%
