@@ -423,7 +423,7 @@ plot8 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill = 
 
 rm(heatmap_data)
 
-############################## DECREASING NARROW ############################## ❌
+############################## DECREASING NARROW ############################## ✅
 
 greedy_narrow_20_decreasing <- read.csv(
   "_office/results/greedy_narrow/summary/decreasing.csv",
@@ -554,7 +554,7 @@ plot19 <- ggplot(data = heatmap_data, aes(x = Parameter1, y = Parameter2, fill =
 rm(heatmap_data)
 
 
-############################## COMBINED PLOT NARROW ############################## ❌
+############################## COMBINED PLOT NARROW ############################## ✅
 
 combined_plot <- plot1 + plot2 + plot3 + plot18 +
   plot_layout(ncol = 2) +
@@ -699,7 +699,7 @@ plot11 <- ggplot(data = keep, aes(x = ON, y = OM, fill = VALUE)) +
     legend.position = "none"
   )
 
-############################## NARROW BREAKDOWN DECREASING MU ############################## ❌
+############################## NARROW BREAKDOWN DECREASING MU ############################## ✅
 keep <- data.frame(
   ON = numeric(),
   OM = numeric(),
@@ -871,7 +871,7 @@ plot14 <- ggplot(data = keep, aes(x = MU, y = OM, fill = VALUE)) +
     legend.position = "none"
   )
 
-############################## NARROW BREAKDOWN DECREASING ON ############################## ❌
+############################## NARROW BREAKDOWN DECREASING ON ############################## ✅
 keep <- data.frame(
   MU = numeric(),
   OM = numeric(),
@@ -1043,7 +1043,7 @@ plot17 <- ggplot(data = keep, aes(x = MU, y = ON, fill = VALUE)) +
     legend.position = "none"
   )
 
-############################## NARROW BREAKDOWN ONLYLISTENONCE OM ############################## ❌
+############################## NARROW BREAKDOWN ONLYLISTENONCE OM ############################## ✅
 keep <- data.frame(
   MU = numeric(),
   OM = numeric(),
@@ -1086,7 +1086,7 @@ plot22 <- ggplot(data = keep, aes(x = MU, y = ON, fill = VALUE)) +
     legend.position = "none"
   )
 
-############################## COMBINED PLOT GRAPH VARIABLES ############################## add plots 20, 21, 22 ❌
+############################## COMBINED PLOT GRAPH VARIABLES ############################## ✅
 
 combined_plot <- plot9 + plot10 + plot11 + plot20 +
   plot12 + plot13 + plot14 + plot21 +
@@ -1094,9 +1094,9 @@ combined_plot <- plot9 + plot10 + plot11 + plot20 +
   plot_layout(ncol = 4) +
   plot_annotation(tag_levels = 'A')
 
-ggsave("visualizations/combined_plot_4x4.png", combined_plot, width = 24, height = 12)
+ggsave("visualizations/combined_plot_4x3.png", combined_plot, width = 24, height = 12)
 
-############################## COMPARISON OF INFLUENCE VALUES ############################## ❌
+############################## COMPARISON OF INFLUENCE VALUES ############################## ✅
 
 data <- data.frame(
   Settings = rep(c("Community values (best)", "Narrow greedy (best)", "Full greedy"), each = 4),
@@ -1125,7 +1125,7 @@ plot_comparison_of_influence_values <- ggplot(data, aes(x = Model, y = Value, fi
 
 ggsave("visualizations/plot_performance.png", plot_comparison_of_influence_values, width = 8, height = 6)
 
-############################## COMPARISON OF RUNTIMES ############################## ❌
+############################## COMPARISON OF RUNTIMES ############################## ✅
 
 data <- data.frame(
   Steps = c(
@@ -1498,7 +1498,7 @@ plot_comparison_of_runtimes <- ggplot(data, aes(x = Model, y = Value, fill = Ste
 
 ggsave("visualizations/plot_runtime_wikivote.png", plot_comparison_of_runtimes, width = 8, height = 6)
 
-############################## COMPARISON OF OVERLAPS ############################## ❌
+############################## COMPARISON OF OVERLAPS ############################## ✅
 
 data <- data.frame(
   Model = rep(c("Independent Cascade", "Linear Threshold", "Only-Listen-Once", "Decreasing Cascade"), each = 5),
